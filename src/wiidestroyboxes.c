@@ -61,8 +61,15 @@ int main(void) {
     shapeDef.density = 1.0;
     shapeDef.material.friction = 0.3;
     b2CreatePolygonShape(bodyId, &shapeDef, &box);
-
     b2Body_SetAngularVelocity(bodyId, 10.0);
+
+    bodyDef.position = (b2Vec2){3.0, 6.0};
+    b2BodyId bodyId2 = b2CreateBody(worldId, &bodyDef);
+    shapeDef.density = 1.0;
+    shapeDef.material.friction = 0.3;
+    b2CreatePolygonShape(bodyId2, &shapeDef, &box);
+    b2Body_SetAngularVelocity(bodyId2, -5.0);
+
 
     // set sim stuff
     const float timeStep = 1.0 / 60.0;
@@ -72,13 +79,16 @@ int main(void) {
         b2World_Step(worldId, timeStep, subStep);
         b2Vec2 pos = b2Body_GetPosition(bodyId);
         b2Rot rot = b2Body_GetRotation(bodyId);
+        b2Vec2 pos2 = b2Body_GetPosition(bodyId2);
+        b2Rot rot2 = b2Body_GetRotation(bodyId2);
 
         XClearWindow(display, window);
         draw_rotated_rect(display, window, gc, scale_x(pos.x), scale_y(pos.y), 25, 25, b2Rot_GetAngle(rot));
+        draw_rotated_rect(display, window, gc, scale_x(pos2.x), scale_y(pos2.y), 25, 25, b2Rot_GetAngle(rot2));
         XFlush(display);
 
-        printf("%4.2f %4.2f %4.2f\n", pos.x, pos.y, b2Rot_GetAngle(rot));
-        printf("%d %d %4.2f\n", scale_x(pos.x), scale_y(pos.y), b2Rot_GetAngle(rot));
+        // printf("%4.2f %4.2f %4.2f\n", pos.x, pos.y, b2Rot_GetAngle(rot));
+        // printf("%d %d %4.2f\n", scale_x(pos.x), scale_y(pos.y), b2Rot_GetAngle(rot));
 
         usleep((1/60.0)/ 0.000001);     // ~60 FPS
         
