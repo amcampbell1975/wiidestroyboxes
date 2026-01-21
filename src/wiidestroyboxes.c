@@ -47,30 +47,31 @@ int main(void) {
     b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);
 
     // make boxes
-    int boxes = 100;
-    float box_size[boxes];
-    b2BodyId bodyId[boxes];
+    int boxes = 0;
+    float box_size[1000];
+    b2BodyId bodyId[1000];
     b2BodyDef bodyDef = b2DefaultBodyDef();
     b2Polygon box = b2MakeBox(0.5, 0.5);
     b2ShapeDef shapeDef = b2DefaultShapeDef();
     bodyDef.type = b2_dynamicBody;
 
-    for (int i=0;i<boxes;i++) {
-        bodyDef.position = (b2Vec2){rand()%16 -8, rand()%32 +1};
-        shapeDef.density = 1.0;
-        shapeDef.material.friction = 0.35;
-        box_size[i] = ((rand() %3) +2) /10.0;
-        box = b2MakeBox(box_size[i], box_size[i]);
-        bodyId[i] = b2CreateBody(worldId, &bodyDef);
-        b2CreatePolygonShape(bodyId[i], &shapeDef, &box);
-    }
     // set simulatin
     const float timeStep = 1.0 / 60.0;
     const int subStep = 4;
     while (true) {
         b2World_Step(worldId, timeStep, subStep);
         XClearWindow(display, window);
-
+        
+        if (boxes <1000) {
+            bodyDef.position = (b2Vec2){rand()%16 -8, rand()%32 +1};
+            shapeDef.density = 1.0;
+            shapeDef.material.friction = 0.35;
+            box_size[boxes] = ((rand() %3) +2) /10.0;
+            box = b2MakeBox(box_size[boxes], box_size[boxes]);
+            bodyId[boxes] = b2CreateBody(worldId, &bodyDef);
+            b2CreatePolygonShape(bodyId[boxes], &shapeDef, &box);
+            boxes++;
+        }
         // draw boxes
         for (int i=0;i<boxes;i++) {
             b2Vec2 pos = b2Body_GetPosition(bodyId[i]);

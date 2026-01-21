@@ -1,4 +1,4 @@
-echo "compiling"
+# echo "compiling"
 # cd box2d
 # gcc -c *.c
 # cd ..
