@@ -39,12 +39,31 @@ int main(void) {
 
     // make ground
     b2BodyDef groundBodyDef = b2DefaultBodyDef();
-    groundBodyDef.position = (b2Vec2){0.0, -10.0};
+    // groundBodyDef.type = b2_dynamicBody;
     groundBodyDef.rotation = b2MakeRot(0.5);
+    groundBodyDef.gravityScale = 0;
     b2BodyId groundId = b2CreateBody(worldId, &groundBodyDef);
-    b2Polygon groundBox = b2MakeBox(10.0, 10.0);
+    b2Polygon groundBox = b2MakeBox(10.0, 1.0);
     b2ShapeDef groundShapeDef = b2DefaultShapeDef();
     b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);
+
+    // make pivot
+    // b2BodyDef pivotBodyDef = b2DefaultBodyDef();
+    // pivotBodyDef.position = (b2Vec2){0.0, 0.0};
+    // b2BodyId pivotId = b2CreateBody(worldId, &pivotBodyDef);
+    // b2Polygon pivotBox = b2MakeBox(0.1, 0.1);
+    // b2ShapeDef pivotShapeDef = b2DefaultShapeDef();
+    // b2CreatePolygonShape(pivotId, &pivotShapeDef, &pivotBox);
+
+    // b2RevoluteJointDef groundJointDef = b2DefaultRevoluteJointDef();
+    // b2JointId groundJointId = b2CreateRevoluteJoint(worldId, &groundJointDef);
+    // b2Joint_GetBodyA(groundJointId);
+    
+    // b2RevoluteJointDef jointDef = b2DefaultRevoluteJointDef();
+    // jointDef.base.bodyIdA = groundId;
+    // jointDef.base.bodyIdB = pivotId;
+    
+    // b2JointId test = b2CreateRevoluteJoint(worldId, &jointDef);
 
     // make boxes
     int boxes = 0;
@@ -61,6 +80,8 @@ int main(void) {
     while (true) {
         b2World_Step(worldId, timeStep, subStep);
         XClearWindow(display, window);
+        b2Vec2 vel = { 5.0f, 0.0f };
+        b2Body_SetTransform(groundId, vel, b2MakeRot(boxes /100.0));
         
         if (boxes <1000) {
             bodyDef.position = (b2Vec2){rand()%16 -8, rand()%32 +1};
@@ -76,8 +97,14 @@ int main(void) {
         for (int i=0;i<boxes;i++) {
             b2Vec2 pos = b2Body_GetPosition(bodyId[i]);
             b2Rot rot = b2Body_GetRotation(bodyId[i]);
-            draw_rotated_rect(display, window, gc, scale_x(pos.x), scale_y(pos.y), box_size[i] *100, box_size[i] *100, b2Rot_GetAngle(rot));
+            draw_rotated_rect(display, window, gc, scale_x(pos.x), scale_y(pos.y), box_size[i] *100, box_size[i] *100, -b2Rot_GetAngle(rot));
         }
+        // b2Vec2 pos = b2Body_GetPosition(pivotId);
+        // draw_rotated_rect(display, window, gc, scale_x(pos.x), scale_y(pos.y), 10, 10, 0);
+        b2Vec2 pos = b2Body_GetPosition(groundId);
+        b2Rot rot = b2Body_GetRotation(groundId);
+        draw_rotated_rect(display, window, gc, scale_x(pos.x), scale_y(pos.y), 1000, 100, -b2Rot_GetAngle(rot));
+
         XFlush(display);
         usleep((1/60.0)/ 0.000001);
     }
