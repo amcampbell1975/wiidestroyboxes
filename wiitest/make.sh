@@ -1,0 +1,1 @@
+sudo docker run --rm -it -v "$(pwd):/src" webhdx/devkitppc-libogc2

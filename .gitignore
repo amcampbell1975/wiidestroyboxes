@@ -1,2 +1,4 @@
 box2d/*.o
 wiidestroyboxes
+wiitest/src.dol
+wiitest/src.elf
