@@ -1,7 +1,6 @@
 #include <gccore.h>
 #include <wiiuse/wpad.h>
-
-#include <fat.h>
+// #include <fat.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,37 +58,9 @@ int main(int argc, char **argv) {
 	// we can use variables for this with format codes too
 	// e.g. printf ("\x1b[%d;%dH", row, column );
 	printf("\x1b[2;0H");
-	for(int i=0;i<100;i++)
-		printf("hello %d\n",i);
-
-	if (!fatInitDefault()) {
-		printf("fatInitDefault failure: terminating\n");
-		goto error;
-	}
-
-	DIR *pdir;
-	struct dirent *pent;
-	struct stat statbuf;
-
-	pdir=opendir(".");
-
-	if (!pdir){
-		printf ("opendir() failure; terminating\n");
-		goto error;
-	}
-
-	while ((pent=readdir(pdir))!=NULL) {
-		stat(pent->d_name,&statbuf);
-		if(strcmp(".", pent->d_name) == 0 || strcmp("..", pent->d_name) == 0)
-			continue;
-		if(S_ISDIR(statbuf.st_mode))
-			printf("%s <dir>\n", pent->d_name);
-		if(!(S_ISDIR(statbuf.st_mode)))
-			printf("%s %lld\n", pent->d_name, statbuf.st_size);
-	}
-	closedir(pdir);
-
-error:
+	for(int i=0;i<200;i++)
+		printf("hello2 %d\n",i);
+	
 	while(1) {
 
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
