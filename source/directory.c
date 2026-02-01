@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "../box2d/box2d/box2d.h"
 
 static void *xfb = NULL;
 static GXRModeObj *rmode = NULL;
@@ -57,7 +58,7 @@ int main(int argc, char **argv) {
 	printf("\x1b[2;0H");
 
 	for(int i=0;i<200;i++) {
-		printf("test %d\n",i);
+		printf("test3 %d\n",i);
 	}
 	
 	while(1) {

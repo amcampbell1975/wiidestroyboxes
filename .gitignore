@@ -1,5 +1,5 @@
 box2d/*.o
 wiidestroyboxes
-wiitest/src.dol
-wiitest/src.elf
-wiitest/build/*
+src.dol
+src.elf
+build/*
