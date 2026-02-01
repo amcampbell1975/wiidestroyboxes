@@ -13,10 +13,8 @@
 static void *xfb = NULL;
 static GXRModeObj *rmode = NULL;
 
-//---------------------------------------------------------------------------------
-int main(int argc, char **argv) {
-//---------------------------------------------------------------------------------
 
+void setup_video(void) {
 	// Initialise the video system
 	VIDEO_Init();
 
@@ -51,18 +49,18 @@ int main(int argc, char **argv) {
 	// Wait for Video setup to complete
 	VIDEO_WaitVSync();
 	if(rmode->viTVMode&VI_NON_INTERLACE) VIDEO_WaitVSync();
+}
 
 
-	// The console understands VT terminal escape codes
-	// This positions the cursor on row 2, column 0
-	// we can use variables for this with format codes too
-	// e.g. printf ("\x1b[%d;%dH", row, column );
+int main(int argc, char **argv) {
+	setup_video();
 	printf("\x1b[2;0H");
-	for(int i=0;i<200;i++)
-		printf("hello2 %d\n",i);
+
+	for(int i=0;i<200;i++) {
+		printf("test %d\n",i);
+	}
 	
 	while(1) {
-
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
 		WPAD_ScanPads();
 
