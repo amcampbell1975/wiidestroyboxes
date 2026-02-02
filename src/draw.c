@@ -6,6 +6,7 @@
 
 #include "draw.h"
 
+
 typedef struct {
     float x, y;
 } Point;

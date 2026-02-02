@@ -19,13 +19,10 @@ float box_size[MAX_BOXES];
 float box_density[MAX_BOXES];
 b2BodyId bodyId[MAX_BOXES];
 
-
-
 // for draw_x11
 int scale_x(float in) {
     return (in * 50) +540;
 }
-
 
 // for draw_x11
 int scale_y(float in) {
@@ -81,7 +78,6 @@ int main(void) {
     int frame = 0;
     while (true) {
         b2World_Step(worldId, timeStep, subStep);
-
         // make box
         if (boxes <MAX_BOXES && frame %9 == 0) {
             bodyDef.position = (b2Vec2){rand()%16 -8, 16};

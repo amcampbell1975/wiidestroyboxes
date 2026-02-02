@@ -1,7 +1,5 @@
 #include <gccore.h>
 #include <wiiuse/wpad.h>
-// #include <fat.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +7,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <math.h>
+
 #include "../box2d/box2d/box2d.h"
 
 static void *xfb = NULL;
@@ -57,8 +57,8 @@ int main(int argc, char **argv) {
 	setup_video();
 	printf("\x1b[2;0H");
 
-	for(int i=0;i<200;i++) {
-		printf("test3 %d\n",i);
+	for(int i=0;i<1030;i++) {
+		printf("2^%d = %f\n",i,pow(2,i));
 	}
 	
 	while(1) {
