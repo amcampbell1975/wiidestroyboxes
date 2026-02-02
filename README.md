@@ -1,5 +1,8 @@
 # wiidestroyboxes
-A DofE project about destroying boxes that will run on the wii.
+Wiidestroyboxes is my DofE project that will run on the wii
+
+
+The game will be about destroying boxes by using with the wii remotes.
 
 
 # The old game (Made in godot)
