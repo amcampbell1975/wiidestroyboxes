@@ -7,7 +7,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <math.h>
 
 #include "../box2d/box2d/box2d.h"
 
@@ -62,30 +61,22 @@ void setup_video(void) {
 int main(int argc, char **argv) {
 	setup_video();
 	printf("\x1b[2;0H");
-
-	for(int i=0;i<32;i++) {
-		printf("2^%d = %f\n",i,pow(2,i));
-		VIDEO_WaitVSync();
-	}
-	
 	setup_box2d();
+
 	while(1) {
 		box2d_next_frame();
 		debug_box2d();
-		// printf("%d \n",frame);
+		
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
-		WPAD_ScanPads();
-
 		// WPAD_ButtonsDown tells us which buttons were pressed in this loop
 		// this is a "one shot" state which will not fire again until the button has been released
-		u32 pressed = WPAD_ButtonsDown(0);
-
 		// We return to the launcher application via exit
+		WPAD_ScanPads();
+		u32 pressed = WPAD_ButtonsDown(0);
 		if ( pressed & WPAD_BUTTON_HOME ) exit(0);
-
+		
 		// Wait for the next frame
-		VIDEO_WaitVSync();
+		VIDEO_WaitVSync(); 
 	}
-
 	return 0;
 }

@@ -10,6 +10,8 @@ The game will be about destroying boxes by using with the wii remotes.
 
 
 # At the start there was only one box
-![ ](img/v1.png)
+![ ](img/img.png)
 # Then a lot!
-![ ](img/v2.png)
+![ ](img/img2.png)
+# Then I got it runing on dolphin
+![](img/img3.png)
