@@ -59,6 +59,7 @@ int main(int argc, char **argv) {
 
 	for(int i=0;i<1030;i++) {
 		printf("2^%d = %f\n",i,pow(2,i));
+		VIDEO_WaitVSync();
 	}
 	
 	while(1) {
