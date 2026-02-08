@@ -6,6 +6,7 @@ The game will be about destroying boxes by using with the wii remotes.
 
 
 # The old version of the game (Made in godot 4.5)
+Video of the original game -> https://youtu.be/pmGe6ucNaJg?si=PcnJ8TSHByOLCiZ3
 ![ ](img/old_game.png)
 
 
