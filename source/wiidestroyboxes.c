@@ -3,8 +3,7 @@
 #include <stdlib.h>
 
 #include "../box2d/box2d/box2d.h"
-
-#define MAX_BOXES 135
+#include "wiidestroyboxes.h"
 
 int box_gravity[MAX_BOXES];
 int boxes = 0;
@@ -52,22 +51,22 @@ void setup_box2d(void) {
 void box2d_next_frame(void) {
     b2World_Step(worldId, timeStep, subStep);
     // make box
-    if (boxes <MAX_BOXES && frame %9 == 0) {
+    if (boxes <MAX_BOXES && frame % 9 == 0) {
         bodyDef.position = (b2Vec2){rand()%16 -8, 16};
-        if (rand() %9 == 0) {
+        if (rand() % 9 == 0) {
             // gold box
             shapeDef.material.friction = 0.35;
             shapeDef.material.restitution = 0.0;
             box_density[boxes] = 4.0;
-            box_gravity[boxes] = -32.0;
+            box_gravity[boxes] = - 32.0;
             box_size[boxes] = 1.0;
         }            
-        else if (rand() %9 == 0) {
+        else if (rand() % 9 == 0) {
             // teleporting box
             shapeDef.material.friction = 0.35;
             shapeDef.material.restitution = 0.5;
             box_density[boxes] = 0.25;
-            box_gravity[boxes] = -1.0;
+            box_gravity[boxes] = - 1.0;
             box_size[boxes] = 0.25;
         }
         else {
@@ -75,7 +74,7 @@ void box2d_next_frame(void) {
             shapeDef.material.friction = 0.35;
             shapeDef.material.restitution = 0.0;
             box_density[boxes] = 1.0;
-            box_gravity[boxes] = -32.0;
+            box_gravity[boxes] = - 32.0;
             box_size[boxes] = 0.5;
         }
         shapeDef.density = box_density[boxes];
@@ -90,11 +89,10 @@ void box2d_next_frame(void) {
         b2Body_ApplyForceToCenter(boxID[i], use_the_force, true);
     }
     // move ground
-    b2Vec2 setpos = {0.0,-5};
-    b2Body_SetTransform(groundId, setpos, b2MakeRot(sin(frame /60.0) /4));
+    b2Vec2 setpos = {0.0, - 5};
+    b2Body_SetTransform(groundId, setpos, b2MakeRot(sin(frame / 60.0) / 4));
 
     frame++;
-    usleep((1/60.0)/ 0.000001);
 }
 
 

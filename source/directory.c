@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
 	printf("\x1b[2;0H");
 	setup_box2d();
 
-	while(1) {
+	while (1) {
 		box2d_next_frame();
 		debug_box2d();
 		
@@ -74,8 +74,7 @@ int main(int argc, char **argv) {
 		WPAD_ScanPads();
 		u32 pressed = WPAD_ButtonsDown(0);
 		if ( pressed & WPAD_BUTTON_HOME ) exit(0);
-		
-		// Wait for the next frame
+
 		VIDEO_WaitVSync(); 
 	}
 	return 0;
