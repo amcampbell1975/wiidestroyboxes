@@ -1,12 +1,13 @@
+// errors are fix in docker
 #include <gccore.h>
 #include <wiiuse/wpad.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+// #include <string.h>
+// #include <dirent.h>
+// #include <sys/types.h>
+// #include <sys/stat.h>
+// #include <unistd.h>
 
 #include "../box2d/box2d/box2d.h"
 
@@ -18,6 +19,7 @@ static GXRModeObj *rmode = NULL;
 void setup_box2d(void);
 void box2d_next_frame(void);
 void debug_box2d(void);
+void clean_up_box2d(void);
 
 
 void setup_video(void) {
@@ -63,10 +65,9 @@ int main(int argc, char **argv) {
 	printf("\x1b[2;0H");
 	setup_box2d();
 
-	while (1) {
+	while(true) {
 		box2d_next_frame();
 		debug_box2d();
-		
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
 		// WPAD_ButtonsDown tells us which buttons were pressed in this loop
 		// this is a "one shot" state which will not fire again until the button has been released
@@ -74,8 +75,10 @@ int main(int argc, char **argv) {
 		WPAD_ScanPads();
 		u32 pressed = WPAD_ButtonsDown(0);
 		if ( pressed & WPAD_BUTTON_HOME ) exit(0);
-
 		VIDEO_WaitVSync(); 
 	}
+
+	// clean up
+	clean_up_box2d();
 	return 0;
 }

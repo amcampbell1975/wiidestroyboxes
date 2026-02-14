@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 
 #include "../box2d/box2d/box2d.h"
@@ -10,6 +9,7 @@ int boxes = 0;
 float box_size[MAX_BOXES];
 float box_density[MAX_BOXES];
 
+// time setup
 const float timeStep = 1.0 / 60.0;
 const int subStep = 4;
 int frame = 0;
@@ -50,20 +50,21 @@ void setup_box2d(void) {
 
 void box2d_next_frame(void) {
     b2World_Step(worldId, timeStep, subStep);
+    
     // make box
     if (boxes <MAX_BOXES && frame % 9 == 0) {
-        bodyDef.position = (b2Vec2){rand()%16 -8, 16};
+        bodyDef.position = (b2Vec2){rand() % 16 - 8, 16};
         if (rand() % 9 == 0) {
             // gold box
-            shapeDef.material.friction = 0.35;
+            shapeDef.material.friction = 0.5;
             shapeDef.material.restitution = 0.0;
             box_density[boxes] = 4.0;
             box_gravity[boxes] = - 32.0;
             box_size[boxes] = 1.0;
         }            
         else if (rand() % 9 == 0) {
-            // teleporting box
-            shapeDef.material.friction = 0.35;
+            // teleport box
+            shapeDef.material.friction = 0.5;
             shapeDef.material.restitution = 0.5;
             box_density[boxes] = 0.25;
             box_gravity[boxes] = - 1.0;
@@ -71,7 +72,7 @@ void box2d_next_frame(void) {
         }
         else {
             // box
-            shapeDef.material.friction = 0.35;
+            shapeDef.material.friction = 0.5;
             shapeDef.material.restitution = 0.0;
             box_density[boxes] = 1.0;
             box_gravity[boxes] = - 32.0;
@@ -83,11 +84,13 @@ void box2d_next_frame(void) {
         b2CreatePolygonShape(boxID[boxes], &shapeDef, &box);
         boxes++;
     }
+
     // gravity for the boxes
-    for (int i=0;i<boxes;i++) {
-        b2Vec2 use_the_force = {0,box_gravity[i] *box_density[i]};
-        b2Body_ApplyForceToCenter(boxID[i], use_the_force, true);
+    for (int i=0; i<boxes; i++) {
+        b2Vec2 apply_force = {0, box_density[i] * box_gravity[i]};
+        b2Body_ApplyForceToCenter(boxID[i], apply_force, true);
     }
+
     // move ground
     b2Vec2 setpos = {0.0, - 5};
     b2Body_SetTransform(groundId, setpos, b2MakeRot(sin(frame / 60.0) / 4));
