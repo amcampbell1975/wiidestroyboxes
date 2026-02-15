@@ -3,14 +3,7 @@
 #include <ogcsys.h>
 #include <gccore.h>
 #include <wiiuse/wpad.h>
-//#include <fat.h>
-//#include <stdio.h>
-
-#include <ogc/system.h>  // SYS_Report
-//#include <unistd.h>
-//#include <dirent.h>
-
-//#include <stdlib.h>
+#include <ogc/system.h>
 
 // Font
 #include "BMfont5_png.h"
@@ -66,25 +59,23 @@ void setup_video(void) {
 
 
 int scale_x(float in) {
-    return (in * 50) +540;
+    return (in * 25) +270;
 }
 
 
 int scale_y(float in) {
-    return (in * -50) +270;
+    return (in * -25) +270;
 }
 
 void draw_wii(void) {
-    // XClearWindow(display, window);
     for (int i=0; i<boxes; i++) {
         b2Vec2 pos = b2Body_GetPosition(boxID[i]);
-        // b2Rot rot = b2Body_GetRotation(boxID[i]);
-		GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, 0, box_size[i] *1, box_size[i] *1, 0xFFFFFFFF);
-        // draw_rotated_rect(display, window, gc, scale_x(pos.x), scale_y(pos.y), box_size[i] *100, box_size[i] *100, -b2Rot_GetAngle(rot));
+        b2Rot rot = b2Body_GetRotation(boxID[i]);
+		GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * -180, box_size[i], box_size[i], 0xFFFFFFFF);
     }
-    // b2Vec2 pos = b2Body_GetPosition(groundId);
-    // b2Rot rot = b2Body_GetRotation(groundId);
-    // draw_rotated_rect(display, window, gc, scale_x(pos.x), scale_y(pos.y), 1000, 300, - b2Rot_GetAngle(rot));
+    b2Vec2 pos = b2Body_GetPosition(groundId);
+    b2Rot rot = b2Body_GetRotation(groundId);
+    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * -180, 10, 3, 0xFFFFFFFF);
 }
 
 
@@ -97,7 +88,7 @@ int main(int argc, char **argv) {
     GRRLIB_InitTileSet(tex_BMfont5, 8, 16, 0); 
 
     // Load crate image
-    tex_crate    = GRRLIB_LoadTexture( crate_png);
+    tex_crate = GRRLIB_LoadTexture(crate_png);
     // Move handle to center of crate. This is so it rotates around the centre.
     GRRLIB_SetMidHandle(tex_crate, true);
 	
@@ -105,29 +96,15 @@ int main(int argc, char **argv) {
 
 	while(true) {
 		box2d_next_frame();
-		debug_box2d();
-
-        WPAD_ScanPads();
 
         // Exit to HBC when Home is pressed
+        WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
 
         // Clear screen to black
         GRRLIB_FillScreen(0x112200FF);
-
 		draw_wii();
-        // GRRLIB_DrawImg(100, 100, tex_crate , frame, 1, 1, 0xFFFFFFFF);
-        // GRRLIB_DrawImg(200, 200, tex_crate, -frame, 1.5, 1.5, 0xFFFFFFFF);
-
-        GRRLIB_Printf(150, 150, tex_BMfont5, GRRLIB_LIME, 1, "Hello World!%d", frame);
-
-        // GRRLIB_Rectangle(400, 350, 20, 100, GRRLIB_RED, 1);
-        // GRRLIB_Line(300, 100, 450, 200, GRRLIB_SILVER);
-
-        // GRRLIB_Circle(300, 300, 50, GRRLIB_OLIVE, 1);
-
-
-        // Render the frame
+        GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_LIME, 1, "Frame %d", frame);
         GRRLIB_Render();
     }
 
