@@ -1,1 +1,1 @@
-docker run --rm -it -v "$(pwd):/src" webhdx/devkitppc-libogc2
+docker run --rm -v "$(pwd):/project" wii-dev make
