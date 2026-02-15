@@ -70,11 +70,11 @@ void draw_boxes_and_floor(void) {
     for (int i=0; i<boxes; i++) {
         b2Vec2 pos = b2Body_GetPosition(boxID[i]);
         b2Rot rot = b2Body_GetRotation(boxID[i]);
-		GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, box_size[i], box_size[i], 0xFFFFFFFF);
+		GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, box_size[i] * 3.1, box_size[i] * 3.1, 0xFFFFFFFF);
     }
     b2Vec2 pos = b2Body_GetPosition(groundId);
     b2Rot rot = b2Body_GetRotation(groundId);
-    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, 9.9, 4.95, 0xFFFFFFFF);
+    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, 10 * 3.1, 5 * 3.1, 0xFFFFFFFF);
 }
 
 
@@ -104,6 +104,7 @@ int main(int argc, char **argv) {
         GRRLIB_FillScreen(GRRLIB_PURPLE);
 		draw_boxes_and_floor();
         GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
+        // GRRLIB_Printf(100, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Debug");
         GRRLIB_Render();
     }
 

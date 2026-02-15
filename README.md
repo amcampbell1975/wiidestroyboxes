@@ -1,14 +1,11 @@
 # wiidestroyboxes
 Wiidestroyboxes is my DofE project that will run on the wii.
 
-
 The game will be about destroying boxes by using with the wii remotes.
-
 
 # The old version of the game (Made in godot 4.5)
 Video of the original game -> https://youtu.be/pmGe6ucNaJg?si=PcnJ8TSHByOLCiZ3
 ![ ](img/old_game.png)
-
 
 # At the start there was only one box
 ![ ](img/img.png)
@@ -16,4 +13,5 @@ Video of the original game -> https://youtu.be/pmGe6ucNaJg?si=PcnJ8TSHByOLCiZ3
 ![ ](img/img2.png)
 # Then I got it runing on dolphin
 ![](img/img3.png)
+# Wii with GRRLIB
 ![](img/img4.png)

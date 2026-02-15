@@ -50,7 +50,7 @@ void setup_box2d(void) {
 
 static void make_box(float friction, float density, float gravity, float size) {
     shapeDef.material.friction = friction;
-    box_density[boxes] = density;
+    box_density[boxes] = pow(density, 2);
     box_gravity[boxes] = gravity;
     box_size[boxes] = size;
     shapeDef.density = density;
@@ -67,23 +67,24 @@ void box2d_next_frame(void) {
     // make boxs
     if (boxes < MAX_BOXES && frame % 9 == 0) {
         boxDef.position = (b2Vec2){rand() % 16 - 8, 16};
-        if (rand() % 9 == 0) {
+        if (rand() % 2 == 0) {
             // big box
-            make_box(0.5, 2.25, -56.0, 1.5);
+            make_box(0.5, 2.25, -100.0, 1.5);
         }            
-        else if (rand() % 9 == 0) {
-            // teleport box
-            make_box(0.5, 0.25, -1.0, 0.5);
+        else if (rand() % 2 == 0) {
+            // small box
+            make_box(0.5, 0.25, -100.0, 0.5);
         }
         else {
             // box
-            make_box(0.5, 1.0, -56.0, 1.0);
+            make_box(0.5, 1.0, -100.0, 1.0);
         }
     }
 
     // gravity for the boxes
     for (int i=0; i<boxes; i++) {
         b2Vec2 apply_force = {0, box_density[i] * box_gravity[i]};
+        printf("%f\n",box_density[i]);
         b2Body_ApplyForceToCenter(boxID[i], apply_force, true);
     }
 
