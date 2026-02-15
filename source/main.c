@@ -32,8 +32,6 @@
 #define GRRLIB_AQUA    0x00FFFFFF
 #define GRRLIB_WHITE   0xFFFFFFFF
 
-unsigned int BG=0x00055FF;
-
 extern int frame;
 extern int boxes;
 extern float box_size[MAX_BOXES];
@@ -59,23 +57,24 @@ void setup_video(void) {
 
 
 int scale_x(float in) {
-    return (in * 25) +270;
+    return (in * 25) + 320;
 }
 
 
 int scale_y(float in) {
-    return (in * -25) +270;
+    return (in * - 25) + 264;
 }
 
-void draw_wii(void) {
+
+void draw_boxes_and_floor(void) {
     for (int i=0; i<boxes; i++) {
         b2Vec2 pos = b2Body_GetPosition(boxID[i]);
         b2Rot rot = b2Body_GetRotation(boxID[i]);
-		GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * -180, box_size[i], box_size[i], 0xFFFFFFFF);
+		GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, box_size[i], box_size[i], 0xFFFFFFFF);
     }
     b2Vec2 pos = b2Body_GetPosition(groundId);
     b2Rot rot = b2Body_GetRotation(groundId);
-    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * -180, 10, 3, 0xFFFFFFFF);
+    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, 10, 3, 0xFFFFFFFF);
 }
 
 
@@ -101,10 +100,10 @@ int main(int argc, char **argv) {
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
 
-        // Clear screen to black
-        GRRLIB_FillScreen(0x112200FF);
-		draw_wii();
-        GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_LIME, 1, "Frame %d", frame);
+        // Clear screen
+        GRRLIB_FillScreen(GRRLIB_GREEN);
+		draw_boxes_and_floor();
+        GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Frame %d", frame);
         GRRLIB_Render();
     }
 
