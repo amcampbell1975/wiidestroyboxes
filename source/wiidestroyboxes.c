@@ -36,7 +36,7 @@ void setup_box2d(void) {
     groundBodyDef = b2DefaultBodyDef();
     groundBodyDef.gravityScale = 0;
     groundId = b2CreateBody(worldId, &groundBodyDef);
-    groundBox = b2MakeBox(10.0, 3.0);
+    groundBox = b2MakeBox(10.0, 5.0);
     groundShapeDef = b2DefaultShapeDef();
     b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);
 
@@ -48,9 +48,8 @@ void setup_box2d(void) {
 }
 
 
-static void make_box(float friction, float restitution, float density, float gravity, float size) {
+static void make_box(float friction, float density, float gravity, float size) {
     shapeDef.material.friction = friction;
-    shapeDef.material.restitution = restitution;
     box_density[boxes] = density;
     box_gravity[boxes] = gravity;
     box_size[boxes] = size;
@@ -69,16 +68,16 @@ void box2d_next_frame(void) {
     if (boxes < MAX_BOXES && frame % 9 == 0) {
         boxDef.position = (b2Vec2){rand() % 16 - 8, 16};
         if (rand() % 9 == 0) {
-            // gold box
-            make_box(0.5, 0.0, 4.0, -32.0, 1.0);
+            // big box
+            make_box(0.5, 2.25, -56.0, 1.5);
         }            
         else if (rand() % 9 == 0) {
             // teleport box
-            make_box(0.5, 0.5, 0.25, -1.0, 0.25);
+            make_box(0.5, 0.25, -1.0, 0.5);
         }
         else {
             // box
-            make_box(0.5, 0.0, 1.0, -32.0, 0.5);
+            make_box(0.5, 1.0, -56.0, 1.0);
         }
     }
 

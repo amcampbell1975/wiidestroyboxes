@@ -9,7 +9,7 @@
 #include "BMfont5_png.h"
 
 //Image
-#include "crate_png.h"
+#include "box_png.h"
 
 #include "../box2d/box2d/box2d.h"
 #include "../source/wiidestroyboxes.h"
@@ -74,7 +74,7 @@ void draw_boxes_and_floor(void) {
     }
     b2Vec2 pos = b2Body_GetPosition(groundId);
     b2Rot rot = b2Body_GetRotation(groundId);
-    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, 10, 3, 0xFFFFFFFF);
+    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, 9.9, 4.95, 0xFFFFFFFF);
 }
 
 
@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
     GRRLIB_InitTileSet(tex_BMfont5, 8, 16, 0); 
 
     // Load crate image
-    tex_crate = GRRLIB_LoadTexture(crate_png);
+    tex_crate = GRRLIB_LoadTexture(box_png);
     // Move handle to center of crate. This is so it rotates around the centre.
     GRRLIB_SetMidHandle(tex_crate, true);
 	
@@ -101,9 +101,9 @@ int main(int argc, char **argv) {
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
 
         // Clear screen
-        GRRLIB_FillScreen(GRRLIB_GREEN);
+        GRRLIB_FillScreen(GRRLIB_PURPLE);
 		draw_boxes_and_floor();
-        GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Frame %d", frame);
+        GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
         GRRLIB_Render();
     }
 
