@@ -20,7 +20,7 @@ b2BodyDef groundBodyDef;
 b2BodyId groundId;
 b2Polygon groundBox;
 b2ShapeDef groundShapeDef;
-b2BodyDef bodyDef;
+b2BodyDef boxDef;
 b2BodyId boxID[MAX_BOXES];
 b2Polygon box;
 b2ShapeDef shapeDef;
@@ -41,48 +41,45 @@ void setup_box2d(void) {
     b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);
 
     // setup boxes
-    bodyDef = b2DefaultBodyDef();
+    boxDef = b2DefaultBodyDef();
     box = b2MakeBox(0.5, 0.5);
     shapeDef = b2DefaultShapeDef();
-    bodyDef.type = b2_dynamicBody;
+    boxDef.type = b2_dynamicBody;
+}
+
+
+static void make_box(float friction, float restitution, float density, float gravity, float size) {
+    shapeDef.material.friction = friction;
+    shapeDef.material.restitution = restitution;
+    box_density[boxes] = density;
+    box_gravity[boxes] = gravity;
+    box_size[boxes] = size;
+    shapeDef.density = density;
+    box = b2MakeBox(size, size);
+    boxID[boxes] = b2CreateBody(worldId, &boxDef);
+    b2CreatePolygonShape(boxID[boxes], &shapeDef, &box);
+    boxes++;
 }
 
 
 void box2d_next_frame(void) {
     b2World_Step(worldId, timeStep, subStep);
     
-    // make box
-    if (boxes <MAX_BOXES && frame % 9 == 0) {
-        bodyDef.position = (b2Vec2){rand() % 16 - 8, 16};
+    // make boxs
+    if (boxes < MAX_BOXES && frame % 9 == 0) {
+        boxDef.position = (b2Vec2){rand() % 16 - 8, 16};
         if (rand() % 9 == 0) {
             // gold box
-            shapeDef.material.friction = 0.5;
-            shapeDef.material.restitution = 0.0;
-            box_density[boxes] = 4.0;
-            box_gravity[boxes] = - 32.0;
-            box_size[boxes] = 1.0;
+            make_box(0.5, 0.0, 4.0, -32.0, 1.0);
         }            
         else if (rand() % 9 == 0) {
             // teleport box
-            shapeDef.material.friction = 0.5;
-            shapeDef.material.restitution = 0.5;
-            box_density[boxes] = 0.25;
-            box_gravity[boxes] = - 1.0;
-            box_size[boxes] = 0.25;
+            make_box(0.5, 0.5, 0.25, -1.0, 0.25);
         }
         else {
             // box
-            shapeDef.material.friction = 0.5;
-            shapeDef.material.restitution = 0.0;
-            box_density[boxes] = 1.0;
-            box_gravity[boxes] = - 32.0;
-            box_size[boxes] = 0.5;
+            make_box(0.5, 0.0, 1.0, -32.0, 0.5);
         }
-        shapeDef.density = box_density[boxes];
-        box = b2MakeBox(box_size[boxes], box_size[boxes]);
-        boxID[boxes] = b2CreateBody(worldId, &bodyDef);
-        b2CreatePolygonShape(boxID[boxes], &shapeDef, &box);
-        boxes++;
     }
 
     // gravity for the boxes
