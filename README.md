@@ -16,3 +16,4 @@ Video of the original game -> https://youtu.be/pmGe6ucNaJg?si=PcnJ8TSHByOLCiZ3
 ![ ](img/img2.png)
 # Then I got it runing on dolphin
 ![](img/img3.png)
+![](img/img4.png)
