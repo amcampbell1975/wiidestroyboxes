@@ -56,13 +56,8 @@ void setup_video(void) {
 }
 
 
-int scale_x(float in) {
-    return (in * 25) + 320;
-}
-
-
-int scale_y(float in) {
-    return (in * - 25) + 264;
+void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y) {
+    GRRLIB_DrawImg((x * 25) + 320, (y * - 25) + 264, img, b2Rot_GetAngle(rot) / B2_PI * - 180, size_x * 0.25, size_y * 0.25, 0xffffffff);
 }
 
 
@@ -70,11 +65,11 @@ void draw_boxes_and_floor(void) {
     for (int i=0; i<boxes; i++) {
         b2Vec2 pos = b2Body_GetPosition(boxID[i]);
         b2Rot rot = b2Body_GetRotation(boxID[i]);
-		GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, box_size[i] * 0.25, box_size[i] * 0.25, 0xFFFFFFFF);
+		draw(pos.x, pos.y, tex_crate, rot, box_size[i], box_size[i]);
     }
     b2Vec2 pos = b2Body_GetPosition(groundId);
     b2Rot rot = b2Body_GetRotation(groundId);
-    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, 2.5, 1.25, 0x74347aff);
+    draw(pos.x, pos.y, tex_crate, rot, 10, 5);
 }
 
 
