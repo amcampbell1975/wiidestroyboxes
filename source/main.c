@@ -70,22 +70,20 @@ void draw_boxes_and_floor(void) {
     for (int i=0; i<boxes; i++) {
         b2Vec2 pos = b2Body_GetPosition(boxID[i]);
         b2Rot rot = b2Body_GetRotation(boxID[i]);
-		GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, box_size[i] * 3.1, box_size[i] * 3.1, 0xFFFFFFFF);
+		GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, box_size[i] * 0.25, box_size[i] * 0.25, 0xFFFFFFFF);
     }
     b2Vec2 pos = b2Body_GetPosition(groundId);
     b2Rot rot = b2Body_GetRotation(groundId);
-    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, 10 * 3.1, 5 * 3.1, 0xFFFFFFFF);
+    GRRLIB_DrawImg(scale_x(pos.x), scale_y(pos.y), tex_crate, b2Rot_GetAngle(rot) / B2_PI * - 180, 2.5, 1.25, 0x74347aff);
 }
 
 
 int main(int argc, char **argv) {
 	setup_video();
-
     // Load Font image
     tex_BMfont5 = GRRLIB_LoadTexture(BMfont5_png);
     // Convert to individual letters.
     GRRLIB_InitTileSet(tex_BMfont5, 8, 16, 0); 
-
     // Load crate image
     tex_crate = GRRLIB_LoadTexture(box_png);
     // Move handle to center of crate. This is so it rotates around the centre.
@@ -96,7 +94,6 @@ int main(int argc, char **argv) {
 	while(true) {
 		box2d_next_frame();
 
-        // Exit to HBC when Home is pressed
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
 
