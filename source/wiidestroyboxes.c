@@ -67,11 +67,11 @@ void box2d_next_frame(void) {
     // make boxs
     if (boxes < MAX_BOXES && frame % 9 == 0) {
         boxDef.position = (b2Vec2){rand() % 16 - 8, 16};
-        if (rand() % 2 == 0) {
+        if (rand() % 10 == 0) {
             // big box
             make_box(0.5, 2.25, -100.0, 1.5);
         }            
-        else if (rand() % 2 == 0) {
+        else if (rand() % 10 == 0) {
             // small box
             make_box(0.5, 0.25, -100.0, 0.5);
         }
@@ -98,11 +98,4 @@ void box2d_next_frame(void) {
 
 void clean_up_box2d(void) {
     b2DestroyWorld(worldId);
-}
-
-
-void debug_box2d(void) {
-    b2Vec2 pos = b2Body_GetPosition(boxID[0]);
-    b2Rot rot = b2Body_GetRotation(boxID[0]);
-    printf("%4.2f %4.2f %4.2f\n", pos.x, pos.y, b2Rot_GetAngle(rot));
 }

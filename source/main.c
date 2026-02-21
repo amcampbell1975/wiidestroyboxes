@@ -7,9 +7,9 @@
 
 // Font
 #include "BMfont5_png.h"
-
 //Image
 #include "box_png.h"
+#include "dark_png.h"
 
 #include "../box2d/box2d/box2d.h"
 #include "../source/wiidestroyboxes.h"
@@ -40,20 +40,11 @@ extern b2BodyId groundId;
 
 void setup_box2d(void);
 void box2d_next_frame(void);
-void debug_box2d(void);
 void clean_up_box2d(void);
 
 GRRLIB_texImg *tex_BMfont5;
 GRRLIB_texImg *tex_crate;
-
-
-void setup_video(void) {
-    // Initialise GRRLIB
-    GRRLIB_Init();
-
-    // Initialise Wiimotes
-    WPAD_Init();
-}
+GRRLIB_texImg *tex_dark;
 
 
 void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y) {
@@ -62,11 +53,13 @@ void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float s
 
 
 void draw_boxes_and_floor(void) {
+    // draw boxes
     for (int i=0; i<boxes; i++) {
         b2Vec2 pos = b2Body_GetPosition(boxID[i]);
         b2Rot rot = b2Body_GetRotation(boxID[i]);
 		draw(pos.x, pos.y, tex_crate, rot, box_size[i], box_size[i]);
     }
+    // draw floor
     b2Vec2 pos = b2Body_GetPosition(groundId);
     b2Rot rot = b2Body_GetRotation(groundId);
     draw(pos.x, pos.y, tex_crate, rot, 10, 5);
@@ -74,15 +67,27 @@ void draw_boxes_and_floor(void) {
 
 
 int main(int argc, char **argv) {
-	setup_video();
+    // Initialise GRRLIB
+    GRRLIB_Init();
+
+    // Initialise Wiimotes
+    WPAD_Init();
+
     // Load Font image
     tex_BMfont5 = GRRLIB_LoadTexture(BMfont5_png);
+
     // Convert to individual letters.
     GRRLIB_InitTileSet(tex_BMfont5, 8, 16, 0); 
+
     // Load crate image
     tex_crate = GRRLIB_LoadTexture(box_png);
+    tex_dark = GRRLIB_LoadTexture(dark_png);
+
     // Move handle to center of crate. This is so it rotates around the centre.
     GRRLIB_SetMidHandle(tex_crate, true);
+
+    // for the wiimote data
+    WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
 	
 	setup_box2d();
 
@@ -92,11 +97,18 @@ int main(int argc, char **argv) {
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
 
-        // Clear screen
         GRRLIB_FillScreen(GRRLIB_PURPLE);
 		draw_boxes_and_floor();
         GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
-        // GRRLIB_Printf(100, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Debug");
+
+        for (int i=0; i<4; i++) {
+           WPADData* data = WPAD_Data(i);
+           
+           if(data->data_present) {
+               GRRLIB_Printf(100, 0 + i * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: x -> %f y-> %f angle -> %f", i, data->ir.x, data->ir.y, data->ir.angle);
+               GRRLIB_DrawImg(data->ir.x - 1000, data->ir.y - 1000, tex_dark, 1, 10, 10, 0xffffffff);
+            }
+        }
         GRRLIB_Render();
     }
 
