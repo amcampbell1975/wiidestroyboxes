@@ -99,16 +99,17 @@ int main(int argc, char **argv) {
 
         GRRLIB_FillScreen(GRRLIB_PURPLE);
 		draw_boxes_and_floor();
-        GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
-
-        for (int i=0; i<4; i++) {
-           WPADData* data = WPAD_Data(i);
-           
-           if(data->data_present) {
-               GRRLIB_Printf(100, 0 + i * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: x -> %f y-> %f angle -> %f", i, data->ir.x, data->ir.y, data->ir.angle);
-               GRRLIB_DrawImg(data->ir.x - 1000, data->ir.y - 1000, tex_dark, 1, 10, 10, 0xffffffff);
+        
+        for (int i=0; i<1; i++) {
+            WPADData* data = WPAD_Data(i);
+            
+            if(data->data_present) {
+                GRRLIB_DrawImg(data->ir.x - 1000, data->ir.y - 1000, tex_dark, 1, 10, 10, 0xffffffff);
+                GRRLIB_Printf(100, 0 + i * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: x -> %f y-> %f angle -> %f", i, data->ir.x, data->ir.y, data->ir.angle);
             }
         }
+        GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
+
         GRRLIB_Render();
     }
 
