@@ -8,6 +8,7 @@
 // Font
 #include "BMfont5_png.h"
 //Image
+
 #include "box_png.h"
 #include "dark_png.h"
 
@@ -90,7 +91,6 @@ int main(int argc, char **argv) {
     WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
 	
 	setup_box2d();
-
 	while(true) {
 		box2d_next_frame();
 
@@ -102,14 +102,12 @@ int main(int argc, char **argv) {
         
         for (int i=0; i<1; i++) {
             WPADData* data = WPAD_Data(i);
-            
             if(data->data_present) {
                 GRRLIB_DrawImg(data->ir.x - 1000, data->ir.y - 1000, tex_dark, 1, 10, 10, 0xffffffff);
-                GRRLIB_Printf(100, 0 + i * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: x -> %f y-> %f angle -> %f", i, data->ir.x, data->ir.y, data->ir.angle);
+                // GRRLIB_Printf(100, 0 + i * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: x -> %f y-> %f angle -> %f", i, data->ir.x, data->ir.y, data->ir.angle);
             }
         }
         GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
-
         GRRLIB_Render();
     }
 
