@@ -1,5 +1,5 @@
 # wiidestroyboxes
-Wiidestroyboxes is my DofE project that will run on the wii.
+Wiidestroyboxes is my DofE project that will run on the wii and dolphin emulator.
 
 The game will be about destroying boxes by using with the wii remotes.
 
@@ -9,9 +9,11 @@ Video of the original game -> https://youtu.be/pmGe6ucNaJg?si=PcnJ8TSHByOLCiZ3
 
 # At the start there was only one box
 ![ ](img/img.png)
-# Then a lot!
+# Then there was a lot!
 ![ ](img/img2.png)
-# Then I got it runing on dolphin
+# Then I got it runing on dolphin emulator
 ![](img/img3.png)
-# Wii with GRRLIB
+# On dolphin emulator with GRRLIB for the graphics
 ![](img/img4.png)
+# Soon I will add hit boxes
+![](img/img5.png)
