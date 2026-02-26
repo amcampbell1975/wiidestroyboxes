@@ -27,7 +27,7 @@ b2ShapeDef shapeDef;
 
 
 void setup_box2d(void) {
-    // box2d make world
+    // make world
     worldDef = b2DefaultWorldDef();
     worldDef.gravity = (b2Vec2){0.0, 0.0};
     worldId = b2CreateWorld(&worldDef);
@@ -67,17 +67,17 @@ void box2d_next_frame(void) {
     // make boxs
     if (boxes < MAX_BOXES && frame % 9 == 0) {
         boxDef.position = (b2Vec2){rand() % 16 - 8, 16};
-        if (rand() % 10 == 0) {
+        if (rand() % 7 == 0) {
             // big box
-            make_box(0.5, 2.25, -100.0, 1.5);
+            make_box(0.5, 2.25, -128.0, 1.5);
         }            
-        else if (rand() % 10 == 0) {
+        else if (rand() % 7 == 0) {
             // small box
-            make_box(0.5, 0.25, -100.0, 0.5);
+            make_box(0.5, 0.25, -128.0, 0.5);
         }
         else {
             // box
-            make_box(0.5, 1.0, -100.0, 1.0);
+            make_box(0.5, 1.0, -128.0, 1.0);
         }
     }
 
@@ -91,7 +91,6 @@ void box2d_next_frame(void) {
     // move ground
     b2Vec2 setpos = {0.0, - 5};
     b2Body_SetTransform(groundId, setpos, b2MakeRot(sin(frame / 60.0) / 4));
-
     frame++;
 }
 

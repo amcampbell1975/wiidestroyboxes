@@ -109,6 +109,8 @@ int main(int argc, char **argv) {
         }
         GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
         GRRLIB_Render();
+
+        if (20 - (frame / 60) <= 0) break;
     }
 
 	// clean up
