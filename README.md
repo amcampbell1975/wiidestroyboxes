@@ -3,8 +3,6 @@ Wiidestroyboxes is my DofE project that will run on the Wii and dolphin emulator
 
 The game will be about destroying boxes in a short amount of time by using with the Wii remotes.
 
-With dolphin emulator use Vulkin not OpenGL (It breaks stuff).
-
 # The old version of the game (Made in godot 4.5)
 Video of the original game -> https://youtu.be/pmGe6ucNaJg?si=PcnJ8TSHByOLCiZ3
 ![ ](img/old_game.png)
