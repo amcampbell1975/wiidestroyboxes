@@ -52,9 +52,9 @@ static void make_box(float friction, float density, float gravity, float size) {
     shapeDef.material.friction = friction;
     box_density[boxes] = pow(density, 2);
     box_gravity[boxes] = gravity;
-    box_size[boxes] = size;
+    box_size[boxes] = size *0.75;
     shapeDef.density = density;
-    box = b2MakeBox(size, size);
+    box = b2MakeBox(size *0.75, size *0.75);
     boxID[boxes] = b2CreateBody(worldId, &boxDef);
     b2CreatePolygonShape(boxID[boxes], &shapeDef, &box);
     boxes++;
@@ -67,17 +67,46 @@ void box2d_next_frame(void) {
     // make boxs
     if (boxes < MAX_BOXES && frame % 9 == 0) {
         boxDef.position = (b2Vec2){rand() % 16 - 8, 16};
-        if (rand() % 7 == 0) {
-            // big box
-            make_box(0.5, 2.25, -128.0, 1.5);
-        }            
-        else if (rand() % 7 == 0) {
-            // small box
-            make_box(0.5, 0.25, -128.0, 0.5);
+
+        // for the "boxes" density is X ^ 2
+        // for the "gold boxes" density is (X * 1.5) ^ 2
+        // for the "boss boxes" density is a big number.
+
+        if (rand() % 3 == 0) {
+            if (rand() % 9 == 0) {
+                // boss gold box
+                make_box(1.0, 32.0, -150.0 , 2.0);
+            } 
+            else if (rand() % 5 == 0) {
+                // big gold box
+                make_box(0.35, 5.0, -100.0, 1.5);
+            }            
+            else if (rand() % 5 == 0) {
+                // small gold box
+                make_box(0.35, 0.55, -100.0, 0.5);
+            }
+            else {
+                // gold box
+                make_box(0.35, 2.25, -100.0, 1.0);
+            }
         }
         else {
-            // box
-            make_box(0.5, 1.0, -128.0, 1.0);
+            if (rand() % 9 == 0) {
+                // boss box
+                make_box(1.0, 8.0, -75.0, 2.5);
+            } 
+            else if (rand() % 5 == 0) {
+                // big box
+                make_box(0.5, 2.25, -100.0, 1.5);
+            }            
+            else if (rand() % 5 == 0) {
+                // small box
+                make_box(0.5, 0.25, -100.0, 0.5);
+            }
+            else {
+                // box
+                make_box(0.5, 1.0, -100.0, 1.0);
+            }
         }
     }
 
