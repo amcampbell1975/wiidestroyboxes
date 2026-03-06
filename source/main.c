@@ -12,6 +12,7 @@
 //Image
 #include "box_png.h"
 #include "dark_png.h"
+#include "thing_1_png.h"
 
 #include "../box2d/box2d/box2d.h"
 #include "../source/wiidestroyboxes.h"
@@ -39,6 +40,7 @@ void clean_up_box2d(void);
 GRRLIB_texImg *tex_BMfont5;
 GRRLIB_texImg *tex_crate;
 GRRLIB_texImg *tex_dark;
+GRRLIB_texImg *tex_thing_1;
 
 
 bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize) {
@@ -67,7 +69,7 @@ void draw_boxes_and_floor(void) {
     // draw floor
     b2Vec2 pos = b2Body_GetPosition(groundId);
     b2Rot rot = b2Body_GetRotation(groundId);
-    draw(pos.x, pos.y, tex_crate, rot, 8, 8);
+    draw(pos.x, pos.y, tex_thing_1, rot, 8, 8);
 }
 
 
@@ -87,9 +89,12 @@ int main(int argc, char **argv) {
     // Load crate image
     tex_crate = GRRLIB_LoadTexture(box_png);
     tex_dark = GRRLIB_LoadTexture(dark_png);
+    tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
 
     // Move handle to center of crate. This is so it rotates around the centre.
     GRRLIB_SetMidHandle(tex_crate, true);
+    GRRLIB_SetMidHandle(tex_dark, true);
+    GRRLIB_SetMidHandle(tex_thing_1, true);
 
     // for the wiimote data
     WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
@@ -107,7 +112,7 @@ int main(int argc, char **argv) {
             WPADData* data = WPAD_Data(wiimote);
 
             if(data->data_present) {
-                // GRRLIB_DrawImg(data->ir.x - 1000, data->ir.y - 1000, tex_dark, 1, 10, 10, 0xffffffff);
+                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_dark, 1, 10, 10, 0xffffffff);
                 GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_crate, 1, 0.1, 0.1, 0xffffffff);
 
                 GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
@@ -131,6 +136,8 @@ int main(int argc, char **argv) {
 	// clean up
 	clean_up_box2d();
     GRRLIB_FreeTexture(tex_crate);
+    GRRLIB_FreeTexture(tex_dark);
+    GRRLIB_FreeTexture(tex_thing_1);
     GRRLIB_FreeTexture(tex_BMfont5);
 
     GRRLIB_Exit();
