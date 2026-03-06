@@ -5,10 +5,12 @@
 #include <wiiuse/wpad.h>
 #include <ogc/system.h>
 
+#include <stdlib.h>
+
 // Font
 #include "BMfont5_png.h"
-//Image
 
+//Image
 #include "box_png.h"
 #include "dark_png.h"
 
@@ -46,6 +48,21 @@ void clean_up_box2d(void);
 GRRLIB_texImg *tex_BMfont5;
 GRRLIB_texImg *tex_crate;
 GRRLIB_texImg *tex_dark;
+
+
+bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize) {
+    float offsetX = abs(boxX * 25 + 320 - pointX);
+    float offsetY = abs(boxY * - 25 + 264  - pointY);
+
+    // GRRLIB_Printf(0, 50, tex_BMfont5, GRRLIB_WHITE, 1, "y %f", offsetX);
+    // GRRLIB_Printf(0, 75, tex_BMfont5, GRRLIB_WHITE, 1, "x %f", offsetY);
+    // GRRLIB_Printf(0, 100, tex_BMfont5, GRRLIB_WHITE, 1, "x %f", boxsize * 25);
+
+    if (offsetY < boxsize * 25 && offsetX < boxsize * 25) {
+        return true;
+    }
+    return false;
+}
 
 
 void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y) {
@@ -99,14 +116,29 @@ int main(int argc, char **argv) {
 
         GRRLIB_FillScreen(GRRLIB_PURPLE);
 		draw_boxes_and_floor();
-        
-        for (int i=0; i<1; i++) {
-            WPADData* data = WPAD_Data(i);
+
+        for (int wiimote=0; wiimote<1; wiimote++) {
+            WPADData* data = WPAD_Data(wiimote);
+
             if(data->data_present) {
-                GRRLIB_DrawImg(data->ir.x - 1000, data->ir.y - 1000, tex_dark, 1, 10, 10, 0xffffffff);
-                // GRRLIB_Printf(100, 0 + i * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: x -> %f y-> %f angle -> %f", i, data->ir.x, data->ir.y, data->ir.angle);
+                // GRRLIB_DrawImg(data->ir.x - 1000, data->ir.y - 1000, tex_dark, 1, 10, 10, 0xffffffff);
+                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_crate, 1, 0.1, 0.1, 0xffffffff);
+
+                GRRLIB_Printf(100, 0 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: x -> %f y-> %f angle -> %f", wiimote, data->ir.x, data->ir.y, data->ir.angle);
+                
+                for (int i=0; i<boxes; i++) {
+                    
+                    if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
+                        GRRLIB_Printf(0, 125, tex_BMfont5, GRRLIB_WHITE, 1, "touched");
+                        // b2DestroyBody(boxID[0]);
+                        b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
+                    }
+                }
             }
         }
+
+
+        // GRRLIB_Printf(0, 25, tex_BMfont5, GRRLIB_WHITE, 1, "b2Body_GetPosition %f %f", b2Body_GetPosition(boxID[0]).x, b2Body_GetPosition(boxID[0]).y);
         GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
         GRRLIB_Render();
 

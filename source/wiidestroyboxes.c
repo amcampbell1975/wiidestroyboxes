@@ -118,8 +118,7 @@ void box2d_next_frame(void) {
     }
 
     // move ground
-    b2Vec2 setpos = {0.0, - 5};
-    b2Body_SetTransform(groundId, setpos, b2MakeRot(sin(frame / 60.0) / 4));
+    b2Body_SetTransform(groundId, (b2Vec2){0.0, - 5}, b2MakeRot(sin(frame / 60.0) / 4));
     frame++;
 }
 
