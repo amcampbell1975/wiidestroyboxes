@@ -4,7 +4,6 @@
 #include <gccore.h>
 #include <wiiuse/wpad.h>
 #include <ogc/system.h>
-
 #include <stdlib.h>
 
 // Font
@@ -21,7 +20,6 @@
 #define GRRLIB_BLACK   0x000000FF
 #define GRRLIB_WHITE   0xFFFFFFFF
 #define GRRLIB_GRAY    0x808080FF
-
 #define GRRLIB_RED     0xFF0000FF
 #define GRRLIB_YELLOW  0xFFFF00FF
 #define GRRLIB_GREEN   0x408000FF
@@ -69,7 +67,7 @@ void draw_boxes_and_floor(void) {
     // draw floor
     b2Vec2 pos = b2Body_GetPosition(groundId);
     b2Rot rot = b2Body_GetRotation(groundId);
-    draw(pos.x, pos.y, tex_crate, rot, 10, 5);
+    draw(pos.x, pos.y, tex_crate, rot, 8, 8);
 }
 
 
@@ -112,13 +110,11 @@ int main(int argc, char **argv) {
                 // GRRLIB_DrawImg(data->ir.x - 1000, data->ir.y - 1000, tex_dark, 1, 10, 10, 0xffffffff);
                 GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_crate, 1, 0.1, 0.1, 0xffffffff);
 
-                GRRLIB_Printf(100, 0 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: x -> %f y-> %f angle -> %f", wiimote, data->ir.x, data->ir.y, data->ir.angle);
+                GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
                 
                 for (int i=0; i<boxes; i++) {
                     
                     if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
-                        GRRLIB_Printf(0, 125, tex_BMfont5, GRRLIB_WHITE, 1, "touched");
-                        // b2DestroyBody(boxID[0]);
                         b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
                     }
                 }
@@ -126,8 +122,7 @@ int main(int argc, char **argv) {
         }
 
 
-        // GRRLIB_Printf(0, 25, tex_BMfont5, GRRLIB_WHITE, 1, "b2Body_GetPosition %f %f", b2Body_GetPosition(boxID[0]).x, b2Body_GetPosition(boxID[0]).y);
-        GRRLIB_Printf(0, 0, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
+        GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
         GRRLIB_Render();
 
         if (20 - (frame / 60) <= 0) break;

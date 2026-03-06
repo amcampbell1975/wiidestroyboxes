@@ -36,7 +36,7 @@ void setup_box2d(void) {
     groundBodyDef = b2DefaultBodyDef();
     groundBodyDef.gravityScale = 0;
     groundId = b2CreateBody(worldId, &groundBodyDef);
-    groundBox = b2MakeBox(10.0, 5.0);
+    groundBox = b2MakeBox(8.0, 8.0);
     groundShapeDef = b2DefaultShapeDef();
     b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);
 
@@ -118,7 +118,7 @@ void box2d_next_frame(void) {
     }
 
     // move ground
-    b2Body_SetTransform(groundId, (b2Vec2){0.0, - 5}, b2MakeRot(sin(frame / 60.0) / 4));
+    b2Body_SetTransform(groundId, (b2Vec2){0.0, - 10}, b2MakeRot(sin(frame / 60.0) / 4));
     frame++;
 }
 
