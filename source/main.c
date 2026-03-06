@@ -19,21 +19,14 @@
 
 // RGBA Colors
 #define GRRLIB_BLACK   0x000000FF
-#define GRRLIB_MAROON  0x800000FF
-#define GRRLIB_GREEN   0x008000FF
-#define GRRLIB_OLIVE   0x808000FF
-#define GRRLIB_NAVY    0x000080FF
-#define GRRLIB_PURPLE  0x800080FF
-#define GRRLIB_TEAL    0x008080FF
-#define GRRLIB_GRAY    0x808080FF
-#define GRRLIB_SILVER  0xC0C0C0FF
-#define GRRLIB_RED     0xFF0000FF
-#define GRRLIB_LIME    0x00FF00FF
-#define GRRLIB_YELLOW  0xFFFF00FF
-#define GRRLIB_BLUE    0x0000FFFF
-#define GRRLIB_FUCHSIA 0xFF00FFFF
-#define GRRLIB_AQUA    0x00FFFFFF
 #define GRRLIB_WHITE   0xFFFFFFFF
+#define GRRLIB_GRAY    0x808080FF
+
+#define GRRLIB_RED     0xFF0000FF
+#define GRRLIB_YELLOW  0xFFFF00FF
+#define GRRLIB_GREEN   0x408000FF
+#define GRRLIB_BLUE    0x0000FFFF
+#define GRRLIB_PURPLE  0x400040FF
 
 extern int frame;
 extern int boxes;
@@ -53,11 +46,7 @@ GRRLIB_texImg *tex_dark;
 bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize) {
     float offsetX = abs(boxX * 25 + 320 - pointX);
     float offsetY = abs(boxY * - 25 + 264  - pointY);
-
-    // GRRLIB_Printf(0, 50, tex_BMfont5, GRRLIB_WHITE, 1, "y %f", offsetX);
-    // GRRLIB_Printf(0, 75, tex_BMfont5, GRRLIB_WHITE, 1, "x %f", offsetY);
-    // GRRLIB_Printf(0, 100, tex_BMfont5, GRRLIB_WHITE, 1, "x %f", boxsize * 25);
-
+    
     if (offsetY < boxsize * 25 && offsetX < boxsize * 25) {
         return true;
     }
@@ -110,7 +99,6 @@ int main(int argc, char **argv) {
 	setup_box2d();
 	while(true) {
 		box2d_next_frame();
-
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
 
