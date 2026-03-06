@@ -11,6 +11,7 @@
 
 //Image
 #include "box_png.h"
+#include "gold_box_png.h"
 #include "dark_png.h"
 #include "thing_1_png.h"
 
@@ -29,6 +30,7 @@
 
 extern int frame;
 extern int boxes;
+extern char box_imgs[MAX_BOXES];
 extern float box_size[MAX_BOXES];
 extern b2BodyId boxID[MAX_BOXES];
 extern b2BodyId groundId;
@@ -38,7 +40,8 @@ void box2d_next_frame(void);
 void clean_up_box2d(void);
 
 GRRLIB_texImg *tex_BMfont5;
-GRRLIB_texImg *tex_crate;
+GRRLIB_texImg *tex_box;
+GRRLIB_texImg *tex_gold_box;
 GRRLIB_texImg *tex_dark;
 GRRLIB_texImg *tex_thing_1;
 
@@ -64,7 +67,12 @@ void draw_boxes_and_floor(void) {
     for (int i=0; i<boxes; i++) {
         b2Vec2 pos = b2Body_GetPosition(boxID[i]);
         b2Rot rot = b2Body_GetRotation(boxID[i]);
-		draw(pos.x, pos.y, tex_crate, rot, box_size[i], box_size[i]);
+        if (box_imgs[i] == 'b') {
+            draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i]);
+        }
+        else if (box_imgs[i] == 'g') {
+            draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i]);
+        }
     }
     // draw floor
     b2Vec2 pos = b2Body_GetPosition(groundId);
@@ -86,13 +94,15 @@ int main(int argc, char **argv) {
     // Convert to individual letters.
     GRRLIB_InitTileSet(tex_BMfont5, 8, 16, 0); 
 
-    // Load crate image
-    tex_crate = GRRLIB_LoadTexture(box_png);
+    // Load box image
+    tex_box = GRRLIB_LoadTexture(box_png);
+    tex_gold_box = GRRLIB_LoadTexture(gold_box_png);
     tex_dark = GRRLIB_LoadTexture(dark_png);
     tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
 
-    // Move handle to center of crate. This is so it rotates around the centre.
-    GRRLIB_SetMidHandle(tex_crate, true);
+    // Move handle to center of box. This is so it rotates around the centre.
+    GRRLIB_SetMidHandle(tex_box, true);
+    GRRLIB_SetMidHandle(tex_gold_box, true);
     GRRLIB_SetMidHandle(tex_dark, true);
     GRRLIB_SetMidHandle(tex_thing_1, true);
 
@@ -113,7 +123,7 @@ int main(int argc, char **argv) {
 
             if(data->data_present) {
                 GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_dark, 1, 10, 10, 0xffffffff);
-                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_crate, 1, 0.1, 0.1, 0xffffffff);
+                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0xffffffff);
 
                 GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
                 
@@ -134,7 +144,7 @@ int main(int argc, char **argv) {
 
 	// clean up
 	clean_up_box2d();
-    GRRLIB_FreeTexture(tex_crate);
+    GRRLIB_FreeTexture(tex_box);
     GRRLIB_FreeTexture(tex_dark);
     GRRLIB_FreeTexture(tex_thing_1);
     GRRLIB_FreeTexture(tex_BMfont5);
