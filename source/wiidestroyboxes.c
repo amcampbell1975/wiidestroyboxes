@@ -36,7 +36,7 @@ void setup_box2d(void) {
     groundBodyDef = b2DefaultBodyDef();
     groundBodyDef.gravityScale = 0;
     groundId = b2CreateBody(worldId, &groundBodyDef);
-    groundBox = b2MakeBox(8.0, 8.0);
+    groundBox = b2MakeBox(10.0, 10.0);
     groundShapeDef = b2DefaultShapeDef();
     b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);
 
@@ -72,16 +72,16 @@ void box2d_next_frame(void) {
         // for the "gold boxes" density is (X * 1.5) ^ 2
         // for the "boss boxes" density is a big number.
 
-        if (rand() % 3 == 0) {
-            if (rand() % 9 == 0) {
+        if (rand() % 5 == 0) {
+            if (rand() % 24 == 0) {
                 // boss gold box
-                make_box(1.0, 32.0, -150.0 , 2.0);
+                make_box(1.0, 24.0, -140.0 , 2.0);
             } 
-            else if (rand() % 5 == 0) {
+            else if (rand() % 4 == 0) {
                 // big gold box
                 make_box(0.35, 5.0, -100.0, 1.5);
             }            
-            else if (rand() % 5 == 0) {
+            else if (rand() % 4 == 0) {
                 // small gold box
                 make_box(0.35, 0.55, -100.0, 0.5);
             }
@@ -91,15 +91,15 @@ void box2d_next_frame(void) {
             }
         }
         else {
-            if (rand() % 9 == 0) {
+            if (rand() % 24 == 0) {
                 // boss box
-                make_box(1.0, 8.0, -75.0, 2.5);
+                make_box(1.0, 8.0, -80.0, 3.0);
             } 
-            else if (rand() % 5 == 0) {
+            else if (rand() % 4 == 0) {
                 // big box
                 make_box(0.5, 2.25, -100.0, 1.5);
             }            
-            else if (rand() % 5 == 0) {
+            else if (rand() % 4 == 0) {
                 // small box
                 make_box(0.5, 0.25, -100.0, 0.5);
             }

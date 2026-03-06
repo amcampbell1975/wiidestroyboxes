@@ -69,7 +69,7 @@ void draw_boxes_and_floor(void) {
     // draw floor
     b2Vec2 pos = b2Body_GetPosition(groundId);
     b2Rot rot = b2Body_GetRotation(groundId);
-    draw(pos.x, pos.y, tex_thing_1, rot, 8, 8);
+    draw(pos.x, pos.y, tex_thing_1, rot, 10, 10);
 }
 
 
@@ -126,11 +126,10 @@ int main(int argc, char **argv) {
             }
         }
 
-
-        GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %d", 20 - (frame / 60));
+        GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %0.1f", 20.0 - (frame / 60.0));
         GRRLIB_Render();
 
-        if (20 - (frame / 60) <= 0) break;
+        if (20.0 - (frame / 60.0) <= 0.0) break;
     }
 
 	// clean up
