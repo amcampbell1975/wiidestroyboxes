@@ -66,13 +66,16 @@ void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float s
 void draw_boxes_and_floor(void) {
     // draw boxes
     for (int i=0; i<boxes; i++) {
-        b2Vec2 pos = b2Body_GetPosition(boxID[i]);
-        b2Rot rot = b2Body_GetRotation(boxID[i]);
-        if (box_imgs[i] == 'b') {
-            draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i]);
-        }
-        else if (box_imgs[i] == 'g') {
-            draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i]);
+        if (box_hp[i] > 0) {
+            b2Vec2 pos = b2Body_GetPosition(boxID[i]);
+            b2Rot rot = b2Body_GetRotation(boxID[i]);
+
+            if (box_imgs[i] == 'b') {
+                draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i]);
+            }
+            else if (box_imgs[i] == 'g') {
+                draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i]);
+            }
         }
     }
     // draw floor
@@ -129,7 +132,6 @@ int main(int argc, char **argv) {
                 GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
                 
                 for (int i=0; i<boxes; i++) {
-                    
                     if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                         box_hp[i] -= 1;
                         if (box_hp[i] <= 0) {
