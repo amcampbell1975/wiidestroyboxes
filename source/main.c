@@ -31,7 +31,7 @@
 extern int frame;
 extern int boxes;
 extern int box_hp[MAX_BOXES];
-extern char box_imgs[MAX_BOXES];
+extern BoxType_T box_imgs[MAX_BOXES];
 extern float box_size[MAX_BOXES];
 extern b2BodyId boxID[MAX_BOXES];
 extern b2BodyId groundId;
@@ -70,10 +70,10 @@ void draw_boxes_and_floor(void) {
             b2Vec2 pos = b2Body_GetPosition(boxID[i]);
             b2Rot rot = b2Body_GetRotation(boxID[i]);
 
-            if (box_imgs[i] == 'b') {
+            if (box_imgs[i] == BOX) {
                 draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i]);
             }
-            else if (box_imgs[i] == 'g') {
+            else if (box_imgs[i] == GOLD_BOX) {
                 draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i]);
             }
         }
