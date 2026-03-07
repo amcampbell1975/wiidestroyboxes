@@ -137,6 +137,9 @@ int main(int argc, char **argv) {
         }
 
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %0.1f", 20.0 - (frame / 60.0));
+        if (frame % 15 == 0) {
+            GRRLIB_Printf(5, 30, tex_BMfont5, GRRLIB_WHITE, 1, "Frame %d", frame);
+        }
         GRRLIB_Render();
 
         if (20.0 - (frame / 60.0) <= 0.0) break;
