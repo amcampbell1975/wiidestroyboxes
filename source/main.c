@@ -30,6 +30,7 @@
 
 extern int frame;
 extern int boxes;
+extern int box_hp[MAX_BOXES];
 extern char box_imgs[MAX_BOXES];
 extern float box_size[MAX_BOXES];
 extern b2BodyId boxID[MAX_BOXES];
@@ -130,7 +131,10 @@ int main(int argc, char **argv) {
                 for (int i=0; i<boxes; i++) {
                     
                     if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
-                        b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
+                        box_hp[i] -= 1;
+                        if (box_hp[i] <= 0) {
+                            b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
+                        }
                     }
                 }
             }

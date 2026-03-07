@@ -4,8 +4,9 @@
 #include "../box2d/box2d/box2d.h"
 #include "wiidestroyboxes.h"
 
-int box_gravity[MAX_BOXES];
 int boxes = 0;
+int box_gravity[MAX_BOXES];
+int box_hp[MAX_BOXES];
 char box_imgs[MAX_BOXES];
 float box_size[MAX_BOXES];
 float box_density[MAX_BOXES];
@@ -51,12 +52,17 @@ void setup_box2d(void) {
 
 static void make_box(float friction, float density, float gravity, float size, char box_img) {
     shapeDef.material.friction = friction;
-    box_density[boxes] = pow(density, 2);
     box_gravity[boxes] = gravity;
-    box_size[boxes] = size * 0.75;
+    box_hp[boxes] = 15;
+
     shapeDef.density = density;
+    box_density[boxes] = pow(density, 2);
+
+    box_size[boxes] = size * 0.75;
     box = b2MakeBox(size * 0.75, size * 0.75);
+
     box_imgs[boxes] = box_img;
+
     boxID[boxes] = b2CreateBody(worldId, &boxDef);
     b2CreatePolygonShape(boxID[boxes], &shapeDef, &box);
     boxes++;
@@ -68,7 +74,7 @@ void box2d_next_frame(void) {
     
     // make boxs
     if (boxes < MAX_BOXES && frame % 15 == 0) {
-        boxDef.position = (b2Vec2){rand() % 16 - 8, 16};
+        boxDef.position = (b2Vec2){rand() % 12 - 6, 16};
 
         // for the "boxes" density is X ^ 2
         // for the "gold boxes" density is (X * 1.5) ^ 2
@@ -115,7 +121,6 @@ void box2d_next_frame(void) {
     // gravity for the boxes
     for (int i=0; i<boxes; i++) {
         b2Vec2 apply_force = {0, box_density[i] * box_gravity[i]};
-        printf("%f\n",box_density[i]);
         b2Body_ApplyForceToCenter(boxID[i], apply_force, true);
     }
 
