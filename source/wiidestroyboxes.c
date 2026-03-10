@@ -58,8 +58,8 @@ static void make_box(float friction, float density, float gravity, float size, B
     shapeDef.density = density;
     box_density[boxes] = pow(density, 2);
 
-    box_size[boxes] = size * 0.75;
-    box = b2MakeBox(size * 0.75, size * 0.75);
+    box_size[boxes] = size * 0.8;
+    box = b2MakeBox(size * 0.8, size * 0.8);
 
     box_imgs[boxes] = img;
 
@@ -73,59 +73,56 @@ void box2d_next_frame(void) {
     b2World_Step(worldId, timeStep, subStep);
     
     // make boxs
-    if (boxes < MAX_BOXES && frame % 15 == 0) {
-        boxDef.position = (b2Vec2){rand() % 12 - 6, 16};
+    if (boxes < MAX_BOXES && frame % 10 == 0) {
+        boxDef.position = (b2Vec2){rand() % 12 - 6, 12};
 
+        // for the "boss boxes" density is a big number that I like at the time.
         // for the "boxes" density is X ^ 2
         // for the "gold boxes" density is (X * 1.5) ^ 2
-        // for the "boss boxes" density is a big number.
-
         if (frame == 300) {
             // boss box
-            make_box(1.0, 8.0, -60.0, 3.5, BOX, 18);
+            make_box(1.0, 8.0, -50.0, 3.5, BOX, 20);
         }
         else if (frame == 900) {
             // boss gold box
-            make_box(1.0, 24.0, -140.0 , 2.5, GOLD_BOX, 12);
+            make_box(1.0, 24.0, -150.0 , 2.5, GOLD_BOX, 14);
         }
         else if (rand() % 3 == 0) {
             if (rand() % 4 == 0) {
                 // big gold box
-                make_box(0.35, 5.0, -100.0, 1.5, GOLD_BOX, 9);
+                make_box(0.4, 5.0, -100.0, 1.5, GOLD_BOX, 9);
             }     
             else if (rand() % 4 == 0) {
                 // small gold box
-                make_box(0.35, 0.55, -100.0, 0.5, GOLD_BOX, 6);
+                make_box(0.4, 0.55, -100.0, 0.5, GOLD_BOX, 6);
             }
             else {
                 // gold box
-                make_box(0.35, 2.25, -100.0, 1.0, GOLD_BOX, 3);
+                make_box(0.4, 2.25, -100.0, 1.0, GOLD_BOX, 3);
             }
         }
         else {
             if (rand() % 4 == 0) {
                 // big box
-                make_box(0.5, 2.25, -100.0, 1.5, BOX, 6);
+                make_box(0.6, 2.25, -100.0, 1.5, BOX, 6);
             }
             else if (rand() % 4 == 0) {
                 // small box
-                make_box(0.5, 0.25, -100.0, 0.5, BOX, 4);
+                make_box(0.6, 0.25, -100.0, 0.5, BOX, 4);
             }
             else {
                 // box
-                make_box(0.5, 1.0, -100.0, 1.0, BOX, 2);
+                make_box(0.6, 1.0, -100.0, 1.0, BOX, 2);
             }
         }
     }
-
     // gravity for the boxes
     for (int i=0; i<boxes; i++) {
         b2Vec2 apply_force = {0, box_density[i] * box_gravity[i]};
         b2Body_ApplyForceToCenter(boxID[i], apply_force, true);
     }
-
     // move ground
-    b2Body_SetTransform(groundId, (b2Vec2){0.0, - 10}, b2MakeRot(sin(frame / 60.0) / 4));
+    b2Body_SetTransform(groundId, (b2Vec2){0.0, - 12}, b2MakeRot(sin(frame / 60.0) *0.35));
     frame++;
 }
 
