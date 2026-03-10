@@ -87,20 +87,20 @@ void box2d_next_frame(void) {
             // boss gold box
             make_box(0.4, 24.0, -100.0 , 2.5, GOLD_BOX, 15);
         }
-        // else if (rand() % 4 == 0) {
-        //     if (rand() % 4 == 0) {
-        //         // big teleport box
-        //         make_box(0.0, 5.0, -25.0, 1.5, TELEPORT_BOX, 9);
-        //     }     
-        //     else if (rand() % 4 == 0) {
-        //         // small teleport box
-        //         make_box(0.0, 0.55, -25.0, 0.5, TELEPORT_BOX, 6);
-        //     }
-        //     else {
-        //         // teleport box
-        //         make_box(0.0, 2.25, -25.0, 1.0, TELEPORT_BOX, 3);
-        //     }
-        // }
+        else if (rand() % 4 == 0) {
+            if (rand() % 4 == 0) {
+                // big teleport box
+                make_box(0.0, 5.0, -25.0, 1.5, TELEPORT_BOX, 9);
+            }     
+            else if (rand() % 4 == 0) {
+                // small teleport box
+                make_box(0.0, 0.55, -25.0, 0.5, TELEPORT_BOX, 6);
+            }
+            else {
+                // teleport box
+                make_box(0.0, 2.25, -25.0, 1.0, TELEPORT_BOX, 3);
+            }
+        }
         else if (rand() % 4 == 0) {
             if (rand() % 4 == 0) {
                 // big gold box

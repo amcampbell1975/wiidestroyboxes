@@ -12,14 +12,14 @@
 //Image
 #include "box_png.h"
 #include "gold_box_png.h"
-// #include "teleport_box_png.h"
+#include "teleport_box_png.h"
 #include "dark_png.h"
 #include "thing_1_png.h"
 
 #include "../box2d/box2d/box2d.h"
 #include "../source/wiidestroyboxes.h"
 
-// RGBA Colors
+// RGB Colors
 #define GRRLIB_BLACK   0x000000FF
 #define GRRLIB_WHITE   0xFFFFFFFF
 #define GRRLIB_GRAY    0x808080FF
@@ -44,7 +44,7 @@ void clean_up_box2d(void);
 GRRLIB_texImg *tex_BMfont5;
 GRRLIB_texImg *tex_box;
 GRRLIB_texImg *tex_gold_box;
-// GRRLIB_texImg *tex_teleport_box;
+GRRLIB_texImg *tex_teleport_box;
 GRRLIB_texImg *tex_dark;
 GRRLIB_texImg *tex_thing_1;
 
@@ -78,9 +78,9 @@ void draw_boxes_and_floor(void) {
             else if (box_imgs[i] == GOLD_BOX) {
                 draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i]);
             }
-            // else if (box_imgs[i] == TELEPORT_BOX) {
-            //     draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i]);
-            // }
+            else if (box_imgs[i] == TELEPORT_BOX) {
+                draw(pos.x, pos.y, tex_teleport_box, rot, box_size[i], box_size[i]);
+            }
         }
     }
     // draw floor
@@ -106,14 +106,15 @@ int main(int argc, char **argv) {
     // Load box image
     tex_box = GRRLIB_LoadTexture(box_png);
     tex_gold_box = GRRLIB_LoadTexture(gold_box_png);
-    // tex_gold_box = GRRLIB_LoadTexture(teleport_box_png);
+    tex_gold_box = GRRLIB_LoadTexture(teleport_box_png);
     tex_dark = GRRLIB_LoadTexture(dark_png);
     tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
 
     // Move handle to center of box. This is so it rotates around the centre.
     GRRLIB_SetMidHandle(tex_box, true);
     GRRLIB_SetMidHandle(tex_gold_box, true);
-    // GRRLIB_SetMidHandle(tex_teleport_box, true);
+    // error for some reason
+    GRRLIB_SetMidHandle(tex_teleport_box, true);
     GRRLIB_SetMidHandle(tex_dark, true);
     GRRLIB_SetMidHandle(tex_thing_1, true);
 
