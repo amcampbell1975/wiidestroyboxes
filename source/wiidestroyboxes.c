@@ -81,11 +81,11 @@ void box2d_next_frame(void) {
         // for the "gold boxes" density is (X * 1.5) ^ 2
         if (frame == 300) {
             // boss box
-            make_box(1.0, 8.0, -50.0, 3.5, BOX, 20);
+            make_box(1.0, 8.0, -50.0, 3.5, BOX, 25);
         }
         else if (frame == 900) {
             // boss gold box
-            make_box(1.0, 24.0, -150.0 , 2.5, GOLD_BOX, 14);
+            make_box(1.0, 24.0, -120.0 , 2.5, GOLD_BOX, 15);
         }
         else if (rand() % 3 == 0) {
             if (rand() % 4 == 0) {
@@ -104,15 +104,15 @@ void box2d_next_frame(void) {
         else {
             if (rand() % 4 == 0) {
                 // big box
-                make_box(0.6, 2.25, -100.0, 1.5, BOX, 6);
+                make_box(0.8, 2.25, -100.0, 1.5, BOX, 6);
             }
             else if (rand() % 4 == 0) {
                 // small box
-                make_box(0.6, 0.25, -100.0, 0.5, BOX, 4);
+                make_box(0.8, 0.25, -100.0, 0.5, BOX, 4);
             }
             else {
                 // box
-                make_box(0.6, 1.0, -100.0, 1.0, BOX, 2);
+                make_box(0.8, 1.0, -100.0, 1.0, BOX, 2);
             }
         }
     }
