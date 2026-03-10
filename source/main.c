@@ -128,14 +128,15 @@ int main(int argc, char **argv) {
             if(data->data_present) {
                 GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_dark, 1, 10, 10, 0xffffffff);
                 GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0xffffffff);
-
-                GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
+                // GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
                 
-                for (int i=0; i<boxes; i++) {
-                    if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
-                        box_hp[i] -= 1;
-                        if (box_hp[i] <= 0) {
-                            b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
+                if (data->btns_d & WPAD_BUTTON_A) {
+                    for (int i=0; i<boxes; i++) {
+                        if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
+                            box_hp[i] -= 1;
+                            if (box_hp[i] <= 0) {
+                                b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
+                            }
                         }
                     }
                 }
@@ -143,9 +144,8 @@ int main(int argc, char **argv) {
         }
 
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %0.1f", 20.0 - (frame / 60.0));
-        if (frame % 15 == 0) {
-            GRRLIB_Printf(5, 30, tex_BMfont5, GRRLIB_WHITE, 1, "Frame %d", frame);
-        }
+        // if (frame % 15 == 0)
+            // GRRLIB_Printf(5, 30, tex_BMfont5, GRRLIB_WHITE, 1, "Frame %d", frame);
         GRRLIB_Render();
 
         if (20.0 - (frame / 60.0) <= 0.0) break;

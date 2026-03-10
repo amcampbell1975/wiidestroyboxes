@@ -53,7 +53,7 @@ void setup_box2d(void) {
 static void make_box(float friction, float density, float gravity, float size, BoxType_T box_img) {
     shapeDef.material.friction = friction;
     box_gravity[boxes] = gravity;
-    box_hp[boxes] = 15;
+    box_hp[boxes] = 4;
 
     shapeDef.density = density;
     box_density[boxes] = pow(density, 2);
