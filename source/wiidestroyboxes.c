@@ -81,13 +81,27 @@ void box2d_next_frame(void) {
         // for the "gold boxes" density is (X * 1.5) ^ 2
         if (frame == 300) {
             // boss box
-            make_box(1.0, 8.0, -50.0, 3.5, BOX, 25);
+            make_box(0.8, 8.0, -50.0, 4.0, BOX, 25);
         }
         else if (frame == 900) {
             // boss gold box
-            make_box(1.0, 24.0, -120.0 , 2.5, GOLD_BOX, 15);
+            make_box(0.4, 24.0, -100.0 , 2.5, GOLD_BOX, 15);
         }
-        else if (rand() % 3 == 0) {
+        // else if (rand() % 4 == 0) {
+        //     if (rand() % 4 == 0) {
+        //         // big teleport box
+        //         make_box(0.0, 5.0, -25.0, 1.5, TELEPORT_BOX, 9);
+        //     }     
+        //     else if (rand() % 4 == 0) {
+        //         // small teleport box
+        //         make_box(0.0, 0.55, -25.0, 0.5, TELEPORT_BOX, 6);
+        //     }
+        //     else {
+        //         // teleport box
+        //         make_box(0.0, 2.25, -25.0, 1.0, TELEPORT_BOX, 3);
+        //     }
+        // }
+        else if (rand() % 4 == 0) {
             if (rand() % 4 == 0) {
                 // big gold box
                 make_box(0.4, 5.0, -100.0, 1.5, GOLD_BOX, 9);
