@@ -115,14 +115,14 @@ int main(int argc, char **argv) {
 	
 	setup_box2d();
 	while(true) {
-		box2d_next_frame();
+        box2d_next_frame();
+        GRRLIB_FillScreen(GRRLIB_PURPLE);
+		draw_boxes_and_floor();
+        
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
 
-        GRRLIB_FillScreen(GRRLIB_PURPLE);
-		draw_boxes_and_floor();
-
-        for (int wiimote=0; wiimote<1; wiimote++) {
+        for (int wiimote=0; wiimote<4; wiimote++) {
             WPADData* data = WPAD_Data(wiimote);
 
             if(data->data_present) {
@@ -144,10 +144,7 @@ int main(int argc, char **argv) {
         }
 
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %0.1f", 20.0 - (frame / 60.0));
-        // if (frame % 15 == 0)
-            // GRRLIB_Printf(5, 30, tex_BMfont5, GRRLIB_WHITE, 1, "Frame %d", frame);
         GRRLIB_Render();
-
         if (20.0 - (frame / 60.0) <= 0.0) break;
     }
 
@@ -157,7 +154,6 @@ int main(int argc, char **argv) {
     GRRLIB_FreeTexture(tex_dark);
     GRRLIB_FreeTexture(tex_thing_1);
     GRRLIB_FreeTexture(tex_BMfont5);
-
     GRRLIB_Exit();
     return 0;
 }
