@@ -13,6 +13,7 @@
 #include "box_png.h"
 #include "gold_box_png.h"
 #include "teleport_box_png.h"
+
 #include "dark_png.h"
 #include "thing_1_png.h"
 
@@ -91,10 +92,7 @@ void draw_boxes_and_floor(void) {
 
 
 int main(int argc, char **argv) {
-    // Initialise GRRLIB
     GRRLIB_Init();
-
-    // Initialise Wiimotes
     WPAD_Init();
 
     // Load Font image
@@ -106,15 +104,16 @@ int main(int argc, char **argv) {
     // Load box image
     tex_box = GRRLIB_LoadTexture(box_png);
     tex_gold_box = GRRLIB_LoadTexture(gold_box_png);
-    tex_gold_box = GRRLIB_LoadTexture(teleport_box_png);
+    tex_teleport_box = GRRLIB_LoadTexture(teleport_box_png);
+
     tex_dark = GRRLIB_LoadTexture(dark_png);
     tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
 
-    // Move handle to center of box. This is so it rotates around the centre.
+    // Move handle to center of box
     GRRLIB_SetMidHandle(tex_box, true);
     GRRLIB_SetMidHandle(tex_gold_box, true);
-    // error for some reason
     GRRLIB_SetMidHandle(tex_teleport_box, true);
+
     GRRLIB_SetMidHandle(tex_dark, true);
     GRRLIB_SetMidHandle(tex_thing_1, true);
 
@@ -159,6 +158,8 @@ int main(int argc, char **argv) {
 	// clean up
 	clean_up_box2d();
     GRRLIB_FreeTexture(tex_box);
+    GRRLIB_FreeTexture(tex_gold_box);
+    GRRLIB_FreeTexture(tex_teleport_box);
     GRRLIB_FreeTexture(tex_dark);
     GRRLIB_FreeTexture(tex_thing_1);
     GRRLIB_FreeTexture(tex_BMfont5);
