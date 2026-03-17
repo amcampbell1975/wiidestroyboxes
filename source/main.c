@@ -56,6 +56,13 @@ GRRLIB_texImg *tex_black;
 GRRLIB_texImg *tex_hole;
 
 
+int clamp(int value, int min, int max) {
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
+}
+
+
 bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize) {
     float offsetX = abs(boxX * 25 + 320 - pointX);
     float offsetY = abs(boxY * - 25 + 264  - pointY);
@@ -79,18 +86,19 @@ void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float s
 }
 
 
-void draw_box(int box) {
+void draw_box(int box, int light_x, int light_y) {
     b2Vec2 pos = b2Body_GetPosition(boxID[box]);
     b2Rot rot = b2Body_GetRotation(boxID[box]);
-    GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", disToPoint(320, 264, pos.x, pos.y));
+    // GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", clamp(disToPoint(light_x, light_y, pos.x, pos.y), 0, 255));
+    
     if (box_img[box] == BOX) {
-        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xffffffff - disToPoint(320, 264, pos.x, pos.y));
+        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xffffffff - (0x01010101 * clamp(disToPoint(light_x, light_y, pos.x, pos.y), 0, 255)));
     }
     else if (box_img[box] == GOLD_BOX) {
-        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xffffffff);
+        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xffffffff - (0x01010101 * clamp(disToPoint(light_x, light_y, pos.x, pos.y), 0, 255)));
     }
     else if (box_img[box] == TELE_BOX) {
-        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xffffffff);
+        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xffffffff - (0x01010101 * clamp(disToPoint(light_x, light_y, pos.x, pos.y), 0, 255)));
     }
 }
 
@@ -144,7 +152,7 @@ int main(int argc, char **argv) {
             
             if(data->data_present) {
                 for (int i=0; i<boxes; i++) {
-                    draw_box(i);
+                    draw_box(i, data->ir.x, data->ir.y);
                     if (data->btns_d & WPAD_BUTTON_A) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
