@@ -104,18 +104,18 @@ int main(int argc, char **argv) {
 
     // Load box image
     tex_box = GRRLIB_LoadTexture(box_png);
-    tex_gold_box = GRRLIB_LoadTexture(gold_box_png);
-    tex_tele_box = GRRLIB_LoadTexture(tele_box_png);
-
-    tex_dark = GRRLIB_LoadTexture(dark_png);
-    tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
-
-    // Move handle to center of box
     GRRLIB_SetMidHandle(tex_box, true);
+
+    tex_gold_box = GRRLIB_LoadTexture(gold_box_png);
     GRRLIB_SetMidHandle(tex_gold_box, true);
+    
+    tex_tele_box = GRRLIB_LoadTexture(tele_box_png);
     GRRLIB_SetMidHandle(tex_tele_box, true);
 
+    tex_dark = GRRLIB_LoadTexture(dark_png);
     GRRLIB_SetMidHandle(tex_dark, true);
+
+    tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
     GRRLIB_SetMidHandle(tex_thing_1, true);
 
     // for the wiimote data
@@ -142,7 +142,7 @@ int main(int argc, char **argv) {
                     for (int i=0; i<boxes; i++) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
-                            
+
                             if (box_img[i] == TELE_BOX) {
                                 respawn_box(i);
                             }
