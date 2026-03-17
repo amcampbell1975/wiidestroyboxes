@@ -12,7 +12,7 @@
 //Image
 #include "box_png.h"
 #include "gold_box_png.h"
-#include "teleport_box_png.h"
+#include "tele_box_png.h"
 
 #include "dark_png.h"
 #include "thing_1_png.h"
@@ -45,7 +45,7 @@ void clean_up_box2d(void);
 GRRLIB_texImg *tex_BMfont5;
 GRRLIB_texImg *tex_box;
 GRRLIB_texImg *tex_gold_box;
-GRRLIB_texImg *tex_teleport_box;
+GRRLIB_texImg *tex_tele_box;
 GRRLIB_texImg *tex_dark;
 GRRLIB_texImg *tex_thing_1;
 
@@ -79,8 +79,8 @@ void draw_boxes_and_floor(void) {
             else if (box_imgs[i] == GOLD_BOX) {
                 draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i]);
             }
-            else if (box_imgs[i] == TELEPORT_BOX) {
-                draw(pos.x, pos.y, tex_teleport_box, rot, box_size[i], box_size[i]);
+            else if (box_imgs[i] == TELE_BOX) {
+                draw(pos.x, pos.y, tex_tele_box, rot, box_size[i], box_size[i]);
             }
         }
     }
@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
     // Load box image
     tex_box = GRRLIB_LoadTexture(box_png);
     tex_gold_box = GRRLIB_LoadTexture(gold_box_png);
-    tex_teleport_box = GRRLIB_LoadTexture(teleport_box_png);
+    tex_tele_box = GRRLIB_LoadTexture(tele_box_png);
 
     tex_dark = GRRLIB_LoadTexture(dark_png);
     tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
     // Move handle to center of box
     GRRLIB_SetMidHandle(tex_box, true);
     GRRLIB_SetMidHandle(tex_gold_box, true);
-    GRRLIB_SetMidHandle(tex_teleport_box, true);
+    GRRLIB_SetMidHandle(tex_tele_box, true);
 
     GRRLIB_SetMidHandle(tex_dark, true);
     GRRLIB_SetMidHandle(tex_thing_1, true);
@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
 	clean_up_box2d();
     GRRLIB_FreeTexture(tex_box);
     GRRLIB_FreeTexture(tex_gold_box);
-    GRRLIB_FreeTexture(tex_teleport_box);
+    GRRLIB_FreeTexture(tex_tele_box);
     GRRLIB_FreeTexture(tex_dark);
     GRRLIB_FreeTexture(tex_thing_1);
     GRRLIB_FreeTexture(tex_BMfont5);
