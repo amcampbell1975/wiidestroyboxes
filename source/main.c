@@ -67,33 +67,31 @@ bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, floa
 }
 
 
-void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y) {
-    GRRLIB_DrawImg((x * 25) + 320, (y * - 25) + 264, img, b2Rot_GetAngle(rot) / B2_PI * - 180, size_x * 0.25, size_y * 0.25, 0xffffffff);
+int disToPoint(float pointX, float pointY, float boxX, float boxY) {
+    float offsetX = abs(boxX * 25 + 320 - pointX);
+    float offsetY = abs(boxY * - 25 + 264  - pointY);
+    return (offsetX + offsetY) / 2;
 }
 
 
-void draw_boxes_and_floor(void) {
-    // draw boxes
-    for (int i=0; i<boxes; i++) {
-        if (box_hp[i] > 0) {
-            b2Vec2 pos = b2Body_GetPosition(boxID[i]);
-            b2Rot rot = b2Body_GetRotation(boxID[i]);
+void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y, int color) {
+    GRRLIB_DrawImg((x * 25) + 320, (y * - 25) + 264, img, b2Rot_GetAngle(rot) / B2_PI * - 180, size_x * 0.25, size_y * 0.25, color);
+}
 
-            if (box_img[i] == BOX) {
-                draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i]);
-            }
-            else if (box_img[i] == GOLD_BOX) {
-                draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i]);
-            }
-            else if (box_img[i] == TELE_BOX) {
-                draw(pos.x, pos.y, tex_tele_box, rot, box_size[i], box_size[i]);
-            }
-        }
+
+void draw_box(int box) {
+    b2Vec2 pos = b2Body_GetPosition(boxID[box]);
+    b2Rot rot = b2Body_GetRotation(boxID[box]);
+    GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", disToPoint(320, 264, pos.x, pos.y));
+    if (box_img[box] == BOX) {
+        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xffffffff - disToPoint(320, 264, pos.x, pos.y));
     }
-    // draw floor
-    b2Vec2 pos = b2Body_GetPosition(groundId);
-    b2Rot rot = b2Body_GetRotation(groundId);
-    draw(pos.x, pos.y, tex_thing_1, rot, 10, 10);
+    else if (box_img[box] == GOLD_BOX) {
+        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xffffffff);
+    }
+    else if (box_img[box] == TELE_BOX) {
+        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xffffffff);
+    }
 }
 
 
@@ -137,8 +135,7 @@ int main(int argc, char **argv) {
         box2d_next_frame();
 
         GRRLIB_FillScreen(GRRLIB_PURPLE);
-        draw_boxes_and_floor();
-
+        
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
         
@@ -146,13 +143,9 @@ int main(int argc, char **argv) {
             WPADData* data = WPAD_Data(wiimote);
             
             if(data->data_present) {
-                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_dark, 1, 10, 10, 0xffffffff);
-                // GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_hole, 1, 1, 1, 0xffffffff);
-                
-                // GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
-                
-                if (data->btns_d & WPAD_BUTTON_A) {
-                    for (int i=0; i<boxes; i++) {
+                for (int i=0; i<boxes; i++) {
+                    draw_box(i);
+                    if (data->btns_d & WPAD_BUTTON_A) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
                             
@@ -167,7 +160,14 @@ int main(int argc, char **argv) {
                     }
                 }
             }
+            // GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
+            GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0xffffffff);
         }
+
+        // draw floor
+        b2Vec2 pos = b2Body_GetPosition(groundId);
+        b2Rot rot = b2Body_GetRotation(groundId);
+        draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
 
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %0.1f", 20.0 - (frame / 60.0));
         
