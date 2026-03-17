@@ -15,5 +15,7 @@ Video of the original game -> https://youtu.be/pmGe6ucNaJg?si=PcnJ8TSHByOLCiZ3
 ![](img/img3.png)
 # On dolphin emulator with GRRLIB for the graphics.
 ![](img/img4.png)
-# Soon I will add hit boxes...
+# Hiting boxes.
 ![](img/img5.png)
+# Some more time... later
+![](img/img6.png)

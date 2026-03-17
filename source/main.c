@@ -30,7 +30,7 @@
 #define GRRLIB_YELLOW  0xFFFF00FF
 #define GRRLIB_GREEN   0x408000FF
 #define GRRLIB_BLUE    0x0000FFFF
-#define GRRLIB_PURPLE  0x400040FF
+#define GRRLIB_PURPLE  0x360F44FF
 
 extern int frame;
 extern int boxes;
@@ -94,13 +94,13 @@ void draw_box(int box, int light_x, int light_y) {
     // GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
     
     if (box_img[box] == BOX) {
-        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xffffffff - light_effect);
+        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
     }
     else if (box_img[box] == GOLD_BOX) {
-        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xffffffff - light_effect);
+        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
     }
     else if (box_img[box] == TELE_BOX) {
-        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xffffffff - light_effect);
+        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
     }
 }
 
@@ -125,17 +125,8 @@ int main(int argc, char **argv) {
     tex_tele_box = GRRLIB_LoadTexture(tele_box_png);
     GRRLIB_SetMidHandle(tex_tele_box, true);
 
-    tex_dark = GRRLIB_LoadTexture(dark_png);
-    GRRLIB_SetMidHandle(tex_dark, true);
-
     tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
     GRRLIB_SetMidHandle(tex_thing_1, true);
-
-    tex_black = GRRLIB_LoadTexture(black_png);
-    GRRLIB_SetMidHandle(tex_black, true);
-
-    tex_hole = GRRLIB_LoadTexture(hole_png);
-    GRRLIB_SetMidHandle(tex_hole, true);
 
     // for the wiimote data
     WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
@@ -190,10 +181,7 @@ int main(int argc, char **argv) {
     GRRLIB_FreeTexture(tex_box);
     GRRLIB_FreeTexture(tex_gold_box);
     GRRLIB_FreeTexture(tex_tele_box);
-    GRRLIB_FreeTexture(tex_dark);
     GRRLIB_FreeTexture(tex_thing_1);
-    GRRLIB_FreeTexture(tex_black);
-    GRRLIB_FreeTexture(tex_hole);
     GRRLIB_FreeTexture(tex_BMfont5);
     GRRLIB_Exit();
     return 0;
