@@ -89,16 +89,18 @@ void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float s
 void draw_box(int box, int light_x, int light_y) {
     b2Vec2 pos = b2Body_GetPosition(boxID[box]);
     b2Rot rot = b2Body_GetRotation(boxID[box]);
-    // GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", clamp(disToPoint(light_x, light_y, pos.x, pos.y), 0, 255));
+
+    int light_effect = clamp(disToPoint(light_x, light_y, pos.x, pos.y) * 2, 0, 255);
+    // GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
     
     if (box_img[box] == BOX) {
-        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xffffffff - (0x01010101 * clamp(disToPoint(light_x, light_y, pos.x, pos.y), 0, 255)));
+        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xffffffff - light_effect);
     }
     else if (box_img[box] == GOLD_BOX) {
-        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xffffffff - (0x01010101 * clamp(disToPoint(light_x, light_y, pos.x, pos.y), 0, 255)));
+        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xffffffff - light_effect);
     }
     else if (box_img[box] == TELE_BOX) {
-        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xffffffff - (0x01010101 * clamp(disToPoint(light_x, light_y, pos.x, pos.y), 0, 255)));
+        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xffffffff - light_effect);
     }
 }
 
