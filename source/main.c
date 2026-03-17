@@ -33,13 +33,14 @@
 extern int frame;
 extern int boxes;
 extern int box_hp[MAX_BOXES];
-extern BoxType_T box_imgs[MAX_BOXES];
+extern BoxType_T box_img[MAX_BOXES];
 extern float box_size[MAX_BOXES];
 extern b2BodyId boxID[MAX_BOXES];
 extern b2BodyId groundId;
 
 void setup_box2d(void);
 void box2d_next_frame(void);
+void respawn_box(int boxID_to_move);
 void clean_up_box2d(void);
 
 GRRLIB_texImg *tex_BMfont5;
@@ -73,13 +74,13 @@ void draw_boxes_and_floor(void) {
             b2Vec2 pos = b2Body_GetPosition(boxID[i]);
             b2Rot rot = b2Body_GetRotation(boxID[i]);
 
-            if (box_imgs[i] == BOX) {
+            if (box_img[i] == BOX) {
                 draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i]);
             }
-            else if (box_imgs[i] == GOLD_BOX) {
+            else if (box_img[i] == GOLD_BOX) {
                 draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i]);
             }
-            else if (box_imgs[i] == TELE_BOX) {
+            else if (box_img[i] == TELE_BOX) {
                 draw(pos.x, pos.y, tex_tele_box, rot, box_size[i], box_size[i]);
             }
         }
@@ -141,6 +142,11 @@ int main(int argc, char **argv) {
                     for (int i=0; i<boxes; i++) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
+                            
+                            if (box_img[i] == TELE_BOX) {
+                                respawn_box(i);
+                            }
+
                             if (box_hp[i] <= 0) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
                             }

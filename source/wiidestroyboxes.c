@@ -7,7 +7,7 @@
 int boxes = 0;
 int box_gravity[MAX_BOXES];
 int box_hp[MAX_BOXES];
-BoxType_T box_imgs[MAX_BOXES];
+BoxType_T box_img[MAX_BOXES];
 float box_size[MAX_BOXES];
 float box_density[MAX_BOXES];
 
@@ -61,7 +61,7 @@ static void make_box(float friction, float density, float gravity, float size, B
     box_size[boxes] = size * 0.8;
     box = b2MakeBox(size * 0.8, size * 0.8);
 
-    box_imgs[boxes] = img;
+    box_img[boxes] = img;
 
     boxID[boxes] = b2CreateBody(worldId, &boxDef);
     b2CreatePolygonShape(boxID[boxes], &shapeDef, &box);
@@ -76,53 +76,50 @@ void box2d_next_frame(void) {
     if (boxes < MAX_BOXES && frame % 10 == 0) {
         boxDef.position = (b2Vec2){rand() % 12 - 6, 12};
 
-        // for the "boss boxes" density is a big number that I like at the time.
-        // for the "boxes" density is X ^ 2
-        // for the "gold boxes" density is (X * 1.5) ^ 2
         if (frame == 300) {
             // boss box
-            make_box(0.8, 8.0, -50.0, 4.0, BOX, 20);
+            make_box(1.0, 6.0, -40.0, 4.0, BOX, 20);
         }
         else if (frame == 900) {
             // boss gold box
-            make_box(0.4, 24.0, -100.0 , 2.5, GOLD_BOX, 15);
+            make_box(1.0, 12.0, -70.0 , 2.5, GOLD_BOX, 15);
         }
-        else if (rand() % 4 == 0) {
+        else if (rand() % 6 == 0) {
             if (rand() % 4 == 0) {
                 // big teleport box
-                make_box(0.0, 5.0, -25.0, 1.5, TELE_BOX, 9);
+                make_box(0.6, 2.25, -20.0, 1.5, TELE_BOX, 3);
             }     
             else if (rand() % 4 == 0) {
                 // small teleport box
-                make_box(0.0, 0.55, -25.0, 0.5, TELE_BOX, 6);
+                make_box(0.6, 0.25, -20.0, 0.5, TELE_BOX, 2);
             }
             else {
                 // teleport box
-                make_box(0.0, 2.25, -25.0, 1.0, TELE_BOX, 3);
+                make_box(0.6, 1.0, -20.0, 1.0, TELE_BOX, 2);
             }
         }
         else if (rand() % 4 == 0) {
             if (rand() % 4 == 0) {
                 // big gold box
-                make_box(0.4, 5.0, -100.0, 1.5, GOLD_BOX, 9);
+                make_box(0.4, 4.0, -100.0, 1.5, GOLD_BOX, 8);
             }     
             else if (rand() % 4 == 0) {
                 // small gold box
-                make_box(0.4, 0.55, -100.0, 0.5, GOLD_BOX, 6);
+                make_box(0.4, 0.75, -100.0, 0.5, GOLD_BOX, 5);
             }
             else {
                 // gold box
-                make_box(0.4, 2.25, -100.0, 1.0, GOLD_BOX, 3);
+                make_box(0.4, 1.5, -100.0, 1.0, GOLD_BOX, 3);
             }
         }
         else {
             if (rand() % 4 == 0) {
                 // big box
-                make_box(0.8, 2.25, -100.0, 1.5, BOX, 6);
+                make_box(0.8, 2.25, -100.0, 1.5, BOX, 5);
             }
             else if (rand() % 4 == 0) {
                 // small box
-                make_box(0.8, 0.25, -100.0, 0.5, BOX, 4);
+                make_box(0.8, 0.25, -100.0, 0.5, BOX, 3);
             }
             else {
                 // box
@@ -138,6 +135,11 @@ void box2d_next_frame(void) {
     // move ground
     b2Body_SetTransform(groundId, (b2Vec2){0.0, - 12}, b2MakeRot(sin(frame / 60.0) *0.35));
     frame++;
+}
+
+
+void respawn_box(int boxID_to_move) {
+    b2Body_SetTransform(boxID[boxID_to_move], (b2Vec2){rand() % 12 - 6, 12}, b2MakeRot(0));
 }
 
 
