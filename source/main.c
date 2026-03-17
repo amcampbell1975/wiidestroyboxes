@@ -16,6 +16,8 @@
 
 #include "dark_png.h"
 #include "thing_1_png.h"
+#include "black_png.h"
+#include "hole_png.h"
 
 #include "../box2d/box2d/box2d.h"
 #include "../source/wiidestroyboxes.h"
@@ -47,8 +49,11 @@ GRRLIB_texImg *tex_BMfont5;
 GRRLIB_texImg *tex_box;
 GRRLIB_texImg *tex_gold_box;
 GRRLIB_texImg *tex_tele_box;
+
 GRRLIB_texImg *tex_dark;
 GRRLIB_texImg *tex_thing_1;
+GRRLIB_texImg *tex_black;
+GRRLIB_texImg *tex_hole;
 
 
 bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize) {
@@ -118,35 +123,43 @@ int main(int argc, char **argv) {
     tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
     GRRLIB_SetMidHandle(tex_thing_1, true);
 
+    tex_black = GRRLIB_LoadTexture(black_png);
+    GRRLIB_SetMidHandle(tex_black, true);
+
+    tex_hole = GRRLIB_LoadTexture(hole_png);
+    GRRLIB_SetMidHandle(tex_hole, true);
+
     // for the wiimote data
     WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
 	
 	setup_box2d();
 	while(true) {
         box2d_next_frame();
+
         GRRLIB_FillScreen(GRRLIB_PURPLE);
-		draw_boxes_and_floor();
-        
+        draw_boxes_and_floor();
+
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
-
+        
         for (int wiimote=0; wiimote<4; wiimote++) {
             WPADData* data = WPAD_Data(wiimote);
-
+            
             if(data->data_present) {
                 GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_dark, 1, 10, 10, 0xffffffff);
-                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0xffffffff);
+                // GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_hole, 1, 1, 1, 0xffffffff);
+                
                 // GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
                 
                 if (data->btns_d & WPAD_BUTTON_A) {
                     for (int i=0; i<boxes; i++) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
-
+                            
                             if (box_img[i] == TELE_BOX) {
                                 respawn_box(i);
                             }
-
+                            
                             if (box_hp[i] <= 0) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
                             }
@@ -157,10 +170,11 @@ int main(int argc, char **argv) {
         }
 
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %0.1f", 20.0 - (frame / 60.0));
+        
         GRRLIB_Render();
         if (20.0 - (frame / 60.0) <= 0.0) break;
     }
-
+    
 	// clean up
 	clean_up_box2d();
     GRRLIB_FreeTexture(tex_box);
@@ -168,6 +182,8 @@ int main(int argc, char **argv) {
     GRRLIB_FreeTexture(tex_tele_box);
     GRRLIB_FreeTexture(tex_dark);
     GRRLIB_FreeTexture(tex_thing_1);
+    GRRLIB_FreeTexture(tex_black);
+    GRRLIB_FreeTexture(tex_hole);
     GRRLIB_FreeTexture(tex_BMfont5);
     GRRLIB_Exit();
     return 0;
