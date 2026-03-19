@@ -146,6 +146,9 @@ int main(int argc, char **argv) {
             if(data->data_present) {
                 for (int i=0; i<boxes; i++) {
                     draw_box(i, data->ir.x, data->ir.y);
+                    // for debuging
+                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0xffffffff);
+
                     if (data->btns_d & WPAD_BUTTON_A) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
@@ -162,21 +165,24 @@ int main(int argc, char **argv) {
                 }
             }
             // GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
-            GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0xffffffff);
         }
 
         // draw floor
         b2Vec2 pos = b2Body_GetPosition(groundId);
         b2Rot rot = b2Body_GetRotation(groundId);
+
+        // draw ground
         draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
 
-        GRRLIB_Printf(280, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %0.1f", 20.0 - (frame / 60.0));
+        GRRLIB_Printf(240, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", 20.0 - (frame / 60.0));
         
         GRRLIB_Render();
+
+        // stop the game
         if (20.0 - (frame / 60.0) <= 0.0) break;
     }
     
-	// clean up
+	// clean up box2d and GRRLIB
 	clean_up_box2d();
     GRRLIB_FreeTexture(tex_box);
     GRRLIB_FreeTexture(tex_gold_box);
