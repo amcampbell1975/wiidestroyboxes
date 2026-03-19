@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
         b2Rot rot = b2Body_GetRotation(groundId);
         draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
 
-        GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %0.1f", 20.0 - (frame / 60.0));
+        GRRLIB_Printf(280, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time %0.1f", 20.0 - (frame / 60.0));
         
         GRRLIB_Render();
         if (20.0 - (frame / 60.0) <= 0.0) break;
