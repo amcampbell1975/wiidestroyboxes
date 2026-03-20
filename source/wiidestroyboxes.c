@@ -76,13 +76,13 @@ void box2d_next_frame(void) {
     if (boxes < MAX_BOXES && frame % 10 == 0) {
         boxDef.position = (b2Vec2){rand() % 12 - 6, 12};
 
-        if (frame == 300) {
+        if (frame == 600) {
             // boss box
-            make_box(1.0, 6.0, -40.0, 4.0, BOX, 20);
+            make_box(1.0, 6.0, -30.0, 4.0, BOX, 20);
         }
-        else if (frame == 900) {
+        else if (frame == 1200) {
             // boss gold box
-            make_box(1.0, 12.0, -70.0 , 2.5, GOLD_BOX, 15);
+            make_box(1.0, 12.0, -50.0 , 2.5, GOLD_BOX, 15);
         }
         else if (rand() % 6 == 0) {
             if (rand() % 4 == 0) {

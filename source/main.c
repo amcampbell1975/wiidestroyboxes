@@ -55,6 +55,9 @@ GRRLIB_texImg *tex_thing_1;
 GRRLIB_texImg *tex_black;
 GRRLIB_texImg *tex_hole;
 
+float time_limit = 30.0;
+int difficulty = 1;
+
 
 int clamp(int value, int min, int max) {
     if (value < min) return min;
@@ -174,12 +177,12 @@ int main(int argc, char **argv) {
         // draw ground
         draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
 
-        GRRLIB_Printf(240, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", 20.0 - (frame / 60.0));
+        GRRLIB_Printf(240, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_limit - (frame / 60.0));
         
         GRRLIB_Render();
 
         // stop the game
-        if (20.0 - (frame / 60.0) <= 0.0) break;
+        if (time_limit - (frame / 60.0) <= 0.0) break;
     }
     
 	// clean up box2d and GRRLIB
