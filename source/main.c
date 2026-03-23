@@ -156,6 +156,7 @@ int main(int argc, char **argv) {
                     if (data->btns_d & WPAD_BUTTON_A) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
+                            score += 10;
                             
                             if (box_img[i] == TELE_BOX) {
                                 respawn_box(i);
@@ -163,6 +164,7 @@ int main(int argc, char **argv) {
                             
                             if (box_hp[i] <= 0) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
+                                score += 50;
                             }
                         }
                     }
@@ -178,7 +180,8 @@ int main(int argc, char **argv) {
         // draw ground
         draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
 
-        GRRLIB_Printf(240, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_limit - (frame / 60.0));
+        GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_limit - (frame / 60.0));
+        GRRLIB_Printf(5, 20, tex_BMfont5, GRRLIB_WHITE, 1, "Score %d", score);
         
         GRRLIB_Render();
 
