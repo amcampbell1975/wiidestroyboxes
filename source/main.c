@@ -56,7 +56,8 @@ GRRLIB_texImg *tex_black;
 GRRLIB_texImg *tex_hole;
 
 float time_limit = 30.0;
-int difficulty = 1;
+int difficulty = 2;
+int score = 0;
 
 
 int clamp(int value, int min, int max) {

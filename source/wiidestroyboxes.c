@@ -4,6 +4,8 @@
 #include "../box2d/box2d/box2d.h"
 #include "wiidestroyboxes.h"
 
+extern int difficulty;
+
 int boxes = 0;
 int box_gravity[MAX_BOXES];
 int box_hp[MAX_BOXES];
@@ -76,13 +78,17 @@ void box2d_next_frame(void) {
     if (boxes < MAX_BOXES && frame % 10 == 0) {
         boxDef.position = (b2Vec2){rand() % 12 - 6, 12};
 
-        if (frame == 600) {
-            // boss box
-            make_box(1.0, 6.0, -30.0, 4.0, BOX, 20);
-        }
-        else if (frame == 1200) {
-            // boss gold box
-            make_box(1.0, 12.0, -50.0 , 2.5, GOLD_BOX, 15);
+        if (frame == 900) {
+            // boss boxes
+            if (difficulty == 1) {
+                make_box(1.0, 6.0, -20.0, 3.5, BOX, 24);
+            }
+            else if (difficulty == 2) {
+                make_box(1.0, 9.0, -25.0 , 2.5, GOLD_BOX, 10);
+            }
+            else {
+                make_box(1.0, 6.0, -10.0 , 2.5, TELE_BOX, 12);
+            }
         }
         else if (rand() % 6 == 0) {
             if (rand() % 4 == 0) {
@@ -101,29 +107,29 @@ void box2d_next_frame(void) {
         else if (rand() % 4 == 0) {
             if (rand() % 4 == 0) {
                 // big gold box
-                make_box(0.4, 4.0, -100.0, 1.5, GOLD_BOX, 8);
+                make_box(0.4, 4.0, -80.0, 1.5, GOLD_BOX, 8);
             }     
             else if (rand() % 4 == 0) {
                 // small gold box
-                make_box(0.4, 0.75, -100.0, 0.5, GOLD_BOX, 5);
+                make_box(0.4, 0.75, -80.0, 0.5, GOLD_BOX, 5);
             }
             else {
                 // gold box
-                make_box(0.4, 1.5, -100.0, 1.0, GOLD_BOX, 3);
+                make_box(0.4, 1.5, -80.0, 1.0, GOLD_BOX, 3);
             }
         }
         else {
             if (rand() % 4 == 0) {
                 // big box
-                make_box(0.8, 2.25, -100.0, 1.5, BOX, 5);
+                make_box(0.8, 2.25, -80.0, 1.5, BOX, 5);
             }
             else if (rand() % 4 == 0) {
                 // small box
-                make_box(0.8, 0.25, -100.0, 0.5, BOX, 3);
+                make_box(0.8, 0.25, -80.0, 0.5, BOX, 3);
             }
             else {
                 // box
-                make_box(0.8, 1.0, -100.0, 1.0, BOX, 2);
+                make_box(0.8, 1.0, -80.0, 1.0, BOX, 2);
             }
         }
     }
