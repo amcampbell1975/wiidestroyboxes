@@ -5,6 +5,7 @@
 #include "wiidestroyboxes.h"
 
 extern int difficulty;
+extern int score;
 
 int boxes = 0;
 int box_hp[MAX_BOXES];
@@ -92,6 +93,9 @@ void box2d_next_frame(void) {
             else if (difficulty == 3) {
                 make_box(1.0, 6.0, -10.0 , 2.5, TELE_BOX, 12);
             }
+            else {
+                score -= 500;
+            }
         }
         else if (rand() % 6 == 0) {
             if (rand() % 4 == 0) {
@@ -142,7 +146,7 @@ void box2d_next_frame(void) {
         b2Body_ApplyForceToCenter(boxID[i], apply_force, true);
     }
     // move ground
-    b2Body_SetTransform(groundId, (b2Vec2){0.0, - 12}, b2MakeRot(sin(frame / 60.0) *0.35));
+    b2Body_SetTransform(groundId, (b2Vec2){0.0, - 12}, b2MakeRot(sin(frame / 90.0 * difficulty) * 0.35));
     frame++;
 }
 

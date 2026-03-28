@@ -161,11 +161,11 @@ int main(int argc, char **argv) {
                             if (box_hp[i] <= 0) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
                                 if (difficulty == 1) {
-                                    score += box_score[i] * 7;
+                                    score += box_score[i] * 5;
                                     time_limit += 0.1;
                                 }
                                 else if (difficulty == 2) {
-                                    score += box_score[i] * 5;
+                                    score += box_score[i] * 4;
                                     time_limit += 0.05;
                                 }
                                 else if (difficulty == 3) {
@@ -202,7 +202,9 @@ int main(int argc, char **argv) {
         GRRLIB_Render();
 
         // stop the game
-        if (time_limit - (frame / 60.0) <= 0.0) break;
+        if (time_limit - (frame / 60.0) <= 0.0 || (difficulty > 2 && score < 0)) {
+            break;
+        }
     }
     
 	// clean up box2d and GRRLIB
