@@ -35,8 +35,9 @@
 extern int frame;
 extern int boxes;
 extern int box_hp[MAX_BOXES];
-extern BoxType_T box_img[MAX_BOXES];
+extern int box_score[MAX_BOXES];
 extern float box_size[MAX_BOXES];
+extern BoxType_T box_img[MAX_BOXES];
 extern b2BodyId boxID[MAX_BOXES];
 extern b2BodyId groundId;
 
@@ -71,7 +72,7 @@ bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, floa
     float offsetX = abs(boxX * 25 + 320 - pointX);
     float offsetY = abs(boxY * - 25 + 264  - pointY);
     
-    if (offsetY < boxsize * 25 && offsetX < boxsize * 25) {
+    if (offsetY < boxsize * 35 && offsetX < boxsize * 35) {
         return true;
     }
     return false;
@@ -156,7 +157,7 @@ int main(int argc, char **argv) {
                     if (data->btns_d & WPAD_BUTTON_A) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
-                            score += 10;
+                            score += box_score[i];
                             
                             if (box_img[i] == TELE_BOX) {
                                 respawn_box(i);
@@ -164,7 +165,7 @@ int main(int argc, char **argv) {
                             
                             if (box_hp[i] <= 0) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
-                                score += 50;
+                                score += box_score[i] * 3;
                             }
                         }
                     }

@@ -7,11 +7,12 @@
 extern int difficulty;
 
 int boxes = 0;
-int box_gravity[MAX_BOXES];
 int box_hp[MAX_BOXES];
-BoxType_T box_img[MAX_BOXES];
+int box_score[MAX_BOXES];
 float box_size[MAX_BOXES];
+int box_gravity[MAX_BOXES];
 float box_density[MAX_BOXES];
+BoxType_T box_img[MAX_BOXES];
 
 // time setup
 const float timeStep = 1.0 / 60.0;
@@ -53,9 +54,11 @@ void setup_box2d(void) {
 
 
 static void make_box(float friction, float density, float gravity, float size, BoxType_T img, int hp) {
+    box_hp[boxes] = hp;
+    box_score[boxes] = 10;
+
     shapeDef.material.friction = friction;
     box_gravity[boxes] = gravity;
-    box_hp[boxes] = hp;
 
     shapeDef.density = density;
     box_density[boxes] = pow(density, 2);
