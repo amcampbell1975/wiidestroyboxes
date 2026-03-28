@@ -145,7 +145,7 @@ int main(int argc, char **argv) {
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
         
-        for (int wiimote=0; wiimote<4; wiimote++) {
+        for (int wiimote=0; wiimote<5; wiimote++) {
             WPADData* data = WPAD_Data(wiimote);
             
             if(data->data_present) {
