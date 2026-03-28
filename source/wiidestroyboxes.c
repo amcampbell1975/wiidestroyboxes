@@ -89,7 +89,7 @@ void box2d_next_frame(void) {
             else if (difficulty == 2) {
                 make_box(1.0, 9.0, -25.0 , 2.5, GOLD_BOX, 10);
             }
-            else {
+            else if (difficulty == 3) {
                 make_box(1.0, 6.0, -10.0 , 2.5, TELE_BOX, 12);
             }
         }
