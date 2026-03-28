@@ -112,11 +112,10 @@ void draw_box(int box, int light_x, int light_y) {
 
 int main(int argc, char **argv) {
     GRRLIB_Init();
-    WPAD_Init();
-
+    
     // Load Font image
     tex_BMfont5 = GRRLIB_LoadTexture(BMfont5_png);
-
+    
     // Convert to individual letters.
     GRRLIB_InitTileSet(tex_BMfont5, 8, 16, 0); 
 
@@ -134,6 +133,7 @@ int main(int argc, char **argv) {
     GRRLIB_SetMidHandle(tex_thing_1, true);
 
     // for the wiimote data
+    WPAD_Init();
     WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
 	
 	setup_box2d();
@@ -148,8 +148,8 @@ int main(int argc, char **argv) {
         draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
         
         WPAD_ScanPads();
-
-        for (int wiimote=0; wiimote<4; wiimote++) {
+        
+        for (int wiimote = 0; wiimote <= 3; wiimote++) {
             WPADData* data = WPAD_Data(wiimote);
 
             if(data->data_present) {
@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
                     GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0xffee00ff);
                 }
 
-                if (data->btns_d & WPAD_BUTTON_A) {
+                if ((data->btns_d && WPAD_BUTTON_A) || (data->btns_d && WPAD_BUTTON_B)) {
                     for (int i=0; i<boxes; i++) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
@@ -202,8 +202,8 @@ int main(int argc, char **argv) {
                         }
                     }
                 }
+                GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
             }
-            // GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
         }
 
 
@@ -213,7 +213,9 @@ int main(int argc, char **argv) {
         GRRLIB_Render();
 
         // stop the game
-        if (time_limit - (frame / 60.0) <= 0.0 || (difficulty > 2 && score < 0) || (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME)) {
+        u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
+
+        if (time_limit - (frame / 60.0) <= 0.0 || (difficulty > 2 && score < 0) || (pressed & WPAD_BUTTON_HOME)) {
             break;
         }
     }
