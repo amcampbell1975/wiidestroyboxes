@@ -139,8 +139,13 @@ int main(int argc, char **argv) {
 	setup_box2d();
 	while(true) {
         box2d_next_frame();
-
+        
         GRRLIB_FillScreen(GRRLIB_PURPLE);
+        
+        // draw floor
+        b2Vec2 pos = b2Body_GetPosition(groundId);
+        b2Rot rot = b2Body_GetRotation(groundId);
+        draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
         
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) break;
@@ -189,12 +194,6 @@ int main(int argc, char **argv) {
             // GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
         }
 
-        // draw floor
-        b2Vec2 pos = b2Body_GetPosition(groundId);
-        b2Rot rot = b2Body_GetRotation(groundId);
-
-        // draw ground
-        draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
 
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_limit - (frame / 60.0));
         GRRLIB_Printf(5, 20, tex_BMfont5, GRRLIB_WHITE, 1, "Score %d", score);
