@@ -59,6 +59,7 @@ GRRLIB_texImg *tex_hole;
 float time_limit = 30.0;
 int difficulty = 2;
 int score = 0;
+bool debug = true;
 
 
 int clamp(int value, int min, int max) {
@@ -179,7 +180,7 @@ int main(int argc, char **argv) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
                                 if (difficulty == 1) {
                                     score += box_score[i] * 5;
-                                    time_limit += 0.1;
+                                    time_limit += 0.15;
                                 }
                                 else if (difficulty == 2) {
                                     score += box_score[i] * 4;
@@ -189,8 +190,7 @@ int main(int argc, char **argv) {
                                     score += box_score[i] * 3;
                                 }
                                 else {
-                                    score += box_score[i] * 2;
-                                    time_limit -= 0.05;
+                                    score += box_score[i];
                                 }
                             }
                             else {
@@ -202,7 +202,9 @@ int main(int argc, char **argv) {
                         }
                     }
                 }
-                GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
+                if (debug) {
+                    GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
+                }
             }
         }
 
@@ -212,10 +214,11 @@ int main(int argc, char **argv) {
         
         GRRLIB_Render();
 
-        // stop the game
+        
         u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
-
-        if (time_limit - (frame / 60.0) <= 0.0 || (difficulty > 2 && score < 0) || (pressed & WPAD_BUTTON_HOME)) {
+        
+        if (time_limit - (frame / 60.0) <= 0.0 || (difficulty > 2 && score < 0) || (pressed && WPAD_BUTTON_HOME && debug)) {
+            // stop the game
             break;
         }
     }
