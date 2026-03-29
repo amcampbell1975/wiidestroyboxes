@@ -217,7 +217,9 @@ int main(int argc, char **argv) {
         
         u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
         
-        if (time_limit - (frame / 60.0) <= 0.0 || (difficulty > 2 && score < 0) || (pressed && WPAD_BUTTON_HOME && debug)) {
+        if ((time_limit - (frame / 60.0) <= 0.0) || 
+        (difficulty > 2 && score < 0) || 
+        (pressed & WPAD_BUTTON_HOME)) {
             // stop the game
             break;
         }
