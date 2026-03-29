@@ -1,36 +1,45 @@
-// errors are fix in docker
 #include <grrlib.h>
 #include <ogcsys.h>
 #include <gccore.h>
 #include <wiiuse/wpad.h>
 #include <ogc/system.h>
 #include <stdlib.h>
-
-// Font
-#include "BMfont5_png.h"
-
-//Image
-#include "box_png.h"
-#include "gold_box_png.h"
-#include "tele_box_png.h"
-
-#include "dark_png.h"
-#include "thing_1_png.h"
-#include "black_png.h"
-#include "hole_png.h"
-
 #include "../box2d/box2d/box2d.h"
 #include "../source/wiidestroyboxes.h"
 
-// RGB Colors
-#define GRRLIB_BLACK   0x000000FF
-#define GRRLIB_WHITE   0xFFFFFFFF
-#define GRRLIB_GRAY    0x808080FF
-#define GRRLIB_RED     0xFF0000FF
-#define GRRLIB_YELLOW  0xFFFF00FF
-#define GRRLIB_GREEN   0x408000FF
-#define GRRLIB_BLUE    0x0000FFFF
-#define GRRLIB_PURPLE  0x360F44FF
+// Font
+#include "BMfont5_png.h"
+GRRLIB_texImg *tex_BMfont5;
+
+//Image
+#include "box_png.h"
+GRRLIB_texImg *tex_box;
+#include "gold_box_png.h"
+GRRLIB_texImg *tex_gold_box;
+#include "tele_box_png.h"
+GRRLIB_texImg *tex_tele_box;
+#include "thing_1_png.h"
+GRRLIB_texImg *tex_thing_1;
+
+// Colors
+#define GRRLIB_BLACK  0x000000FF
+#define GRRLIB_WHITE  0xFFFFFFFF
+#define GRRLIB_GRAY   0x808080FF
+#define GRRLIB_RED    0xFF0000FF
+#define GRRLIB_YELLOW 0xFFFF00FF
+#define GRRLIB_GREEN  0x408000FF
+#define GRRLIB_BLUE   0x0000FFFF
+#define GRRLIB_PURPLE 0x360F44FF
+
+void setup_box2d(void);
+void box2d_next_frame(void);
+void respawn_box(int boxID_to_move);
+void clean_up_box2d(void);
+int clamp(int value, int min, int max);
+bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize);
+int disToPoint(float pointX, float pointY, float boxX, float boxY);
+int disToPoint(float pointX, float pointY, float boxX, float boxY);
+void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y, int color);
 
 extern int frame;
 extern int boxes;
@@ -41,55 +50,10 @@ extern BoxType_T box_img[MAX_BOXES];
 extern b2BodyId boxID[MAX_BOXES];
 extern b2BodyId groundId;
 
-void setup_box2d(void);
-void box2d_next_frame(void);
-void respawn_box(int boxID_to_move);
-void clean_up_box2d(void);
-
-GRRLIB_texImg *tex_BMfont5;
-GRRLIB_texImg *tex_box;
-GRRLIB_texImg *tex_gold_box;
-GRRLIB_texImg *tex_tele_box;
-
-GRRLIB_texImg *tex_dark;
-GRRLIB_texImg *tex_thing_1;
-GRRLIB_texImg *tex_black;
-GRRLIB_texImg *tex_hole;
-
 float time_limit = 30.0;
 int difficulty = 2;
 int score = 0;
 bool debug = true;
-
-
-int clamp(int value, int min, int max) {
-    if (value < min) return min;
-    if (value > max) return max;
-    return value;
-}
-
-
-bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize) {
-    float offsetX = abs(boxX * 25 + 320 - pointX);
-    float offsetY = abs(boxY * - 25 + 264  - pointY);
-    
-    if (offsetY < boxsize * 35 && offsetX < boxsize * 35) {
-        return true;
-    }
-    return false;
-}
-
-
-int disToPoint(float pointX, float pointY, float boxX, float boxY) {
-    float offsetX = abs(boxX * 25 + 320 - pointX);
-    float offsetY = abs(boxY * - 25 + 264  - pointY);
-    return (offsetX + offsetY) / 2;
-}
-
-
-void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y, int color) {
-    GRRLIB_DrawImg((x * 25) + 320, (y * - 25) + 264, img, b2Rot_GetAngle(rot) / B2_PI * - 180, size_x * 0.25, size_y * 0.25, color);
-}
 
 
 void draw_box(int box, int light_x, int light_y) {
@@ -97,8 +61,6 @@ void draw_box(int box, int light_x, int light_y) {
     b2Rot rot = b2Body_GetRotation(boxID[box]);
 
     int light_effect = clamp(disToPoint(light_x, light_y, pos.x, pos.y) * 2, 0, 255);
-    // GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
-    
     if (box_img[box] == BOX) {
         draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
     }
@@ -108,19 +70,21 @@ void draw_box(int box, int light_x, int light_y) {
     else if (box_img[box] == TELE_BOX) {
         draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
     }
+    
+    if (debug) {
+        GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
+    }
 }
 
 
 int main(int argc, char **argv) {
     GRRLIB_Init();
     
-    // Load Font image
+    // font
     tex_BMfont5 = GRRLIB_LoadTexture(BMfont5_png);
-    
-    // Convert to individual letters.
     GRRLIB_InitTileSet(tex_BMfont5, 8, 16, 0); 
 
-    // Load box image
+    // image
     tex_box = GRRLIB_LoadTexture(box_png);
     GRRLIB_SetMidHandle(tex_box, true);
 
@@ -133,14 +97,14 @@ int main(int argc, char **argv) {
     tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
     GRRLIB_SetMidHandle(tex_thing_1, true);
 
-    // for the wiimote data
+    // wiimote
     WPAD_Init();
     WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
 	
 	setup_box2d();
+
 	while(true) {
         box2d_next_frame();
-        
         GRRLIB_FillScreen(GRRLIB_PURPLE);
         
         // draw floor
@@ -208,18 +172,14 @@ int main(int argc, char **argv) {
             }
         }
 
-
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_limit - (frame / 60.0));
         GRRLIB_Printf(5, 20, tex_BMfont5, GRRLIB_WHITE, 1, "Score %d", score);
-        
         GRRLIB_Render();
-
         
         u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
-        
         if ((time_limit - (frame / 60.0) <= 0.0) || 
-        (difficulty > 2 && score < 0) || 
-        (pressed & WPAD_BUTTON_HOME)) {
+                (difficulty > 2 && score < 0) || 
+                (pressed & WPAD_BUTTON_HOME)) {
             // stop the game
             break;
         }
@@ -234,4 +194,34 @@ int main(int argc, char **argv) {
     GRRLIB_FreeTexture(tex_BMfont5);
     GRRLIB_Exit();
     return 0;
+}
+
+
+int clamp(int value, int min, int max) {
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
+}
+
+
+bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize) {
+    float offsetX = abs(boxX * 25 + 320 - pointX);
+    float offsetY = abs(boxY * - 25 + 264  - pointY);
+    
+    if (offsetY < boxsize * 35 && offsetX < boxsize * 35) {
+        return true;
+    }
+    return false;
+}
+
+
+int disToPoint(float pointX, float pointY, float boxX, float boxY) {
+    float offsetX = abs(boxX * 25 + 320 - pointX);
+    float offsetY = abs(boxY * - 25 + 264  - pointY);
+    return (offsetX + offsetY) / 2;
+}
+
+
+void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y, int color) {
+    GRRLIB_DrawImg((x * 25) + 320, (y * - 25) + 264, img, b2Rot_GetAngle(rot) / B2_PI * - 180, size_x * 0.25, size_y * 0.25, color);
 }
