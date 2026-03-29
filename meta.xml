@@ -1,20 +1,22 @@
-<?xml version="0.6" encoding="UTF-8" standalone="yes"?>
-<app version="0.6">
+<?xml version="0.6.1" encoding="UTF-8" standalone="yes"?>
+<app version="0.6.1">
   <name>wiidestroyboxes</name>
   <coder>codingbanana</coder>
-  <version>0.6</version>
+  <version>0.6.1</version>
   <release_date>202601</release_date>
   <short_description>text</short_description>
   <long_description>
-Controls:
+Wiidestroyboxes is my DofE project that will run on the Wii and dolphin emulator.
+The game will be about destroying boxes in a short amount of time by using with the Wii remotes.
 
-(A) attack
+Controls:
+(A) or (B) attack
 
 Todo:
-
-- stuff
-
-Changelog:
+- fix player 4
+- Main menu
+- pvp mode
+- powerups boxes
 
 </long_description>
 </app>
