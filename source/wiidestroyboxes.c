@@ -4,9 +4,6 @@
 #include "../box2d/box2d/box2d.h"
 #include "wiidestroyboxes.h"
 
-extern int difficulty;
-extern int score;
-
 int boxes = 0;
 int box_hp[MAX_BOXES];
 int box_score[MAX_BOXES];
@@ -14,11 +11,6 @@ float box_size[MAX_BOXES];
 int box_gravity[MAX_BOXES];
 float box_density[MAX_BOXES];
 BoxType_T box_img[MAX_BOXES];
-
-// time setup
-const float timeStep = 1.0 / 60.0;
-const int subStep = 4;
-int frame = 0;
 
 b2WorldDef worldDef;
 b2WorldId worldId;
@@ -30,6 +22,14 @@ b2BodyDef boxDef;
 b2BodyId boxID[MAX_BOXES];
 b2Polygon box;
 b2ShapeDef shapeDef;
+
+// time setup
+const float timeStep = 1.0 / 60.0;
+const int subStep = 4;
+int frame = 0;
+
+extern int difficulty;
+extern int score;
 
 
 void setup_box2d(void) {
@@ -61,11 +61,11 @@ static void make_box(float friction, float density, float gravity, float size, B
     shapeDef.material.friction = friction;
     box_gravity[boxes] = gravity;
 
-    shapeDef.density = density;
-    box_density[boxes] = pow(density, 2);
+    box_size[boxes] = size * 0.5;
+    box = b2MakeBox(size * 0.5, size * 0.5);
 
-    box_size[boxes] = size * 0.8;
-    box = b2MakeBox(size * 0.8, size * 0.8);
+    shapeDef.density = density;
+    box_density[boxes] = density * size * 0.5;
 
     box_img[boxes] = img;
 
@@ -77,67 +77,36 @@ static void make_box(float friction, float density, float gravity, float size, B
 
 void box2d_next_frame(void) {
     b2World_Step(worldId, timeStep, subStep);
-    
+
     // make boxs
     if (boxes < MAX_BOXES && frame % 10 == 0) {
         boxDef.position = (b2Vec2){rand() % 12 - 6, 12};
 
+        int rang_box_size = rand() % 3 + 1;
+
         if (frame == 900) {
             // boss boxes
             if (difficulty == 1) {
-                make_box(1.0, 6.0, -20.0, 3.5, BOX, 24);
+                make_box(0.8, 4.0, -20.0, 3.5, BOX, 30);
             }
             else if (difficulty == 2) {
-                make_box(1.0, 9.0, -25.0 , 2.5, GOLD_BOX, 10);
+                make_box(0.4, 8.0, -20.0 , 2.5, GOLD_BOX, 15);
             }
             else if (difficulty == 3) {
-                make_box(1.0, 6.0, -10.0 , 2.5, TELE_BOX, 12);
-            }
-            else {
-                score -= 500;
+                make_box(0.8, 6.0, -5.0 , 2.5, TELE_BOX, 10);
             }
         }
-        else if (rand() % 6 == 0) {
-            if (rand() % 4 == 0) {
-                // big teleport box
-                make_box(0.6, 2.25, -20.0, 1.5, TELE_BOX, 3);
-            }     
-            else if (rand() % 4 == 0) {
-                // small teleport box
-                make_box(0.6, 0.25, -20.0, 0.5, TELE_BOX, 2);
-            }
-            else {
-                // teleport box
-                make_box(0.6, 1.0, -20.0, 1.0, TELE_BOX, 2);
-            }
+        else if (rand() % 7 == 0) {
+            // teleport boxes
+            make_box(0.8, pow(0.75 * rang_box_size, 2), -20.0, 1.0 * rang_box_size, TELE_BOX, 2 * rang_box_size);
         }
-        else if (rand() % 4 == 0) {
-            if (rand() % 4 == 0) {
-                // big gold box
-                make_box(0.4, 4.0, -80.0, 1.5, GOLD_BOX, 8);
-            }     
-            else if (rand() % 4 == 0) {
-                // small gold box
-                make_box(0.4, 0.75, -80.0, 0.5, GOLD_BOX, 5);
-            }
-            else {
-                // gold box
-                make_box(0.4, 1.5, -80.0, 1.0, GOLD_BOX, 3);
-            }
+        else if (rand() % 7 == 0) {
+            // gold boxes
+            make_box(0.4, pow(1.5 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, GOLD_BOX, 3 * rang_box_size);
         }
         else {
-            if (rand() % 4 == 0) {
-                // big box
-                make_box(0.8, 2.25, -80.0, 1.5, BOX, 5);
-            }
-            else if (rand() % 4 == 0) {
-                // small box
-                make_box(0.8, 0.25, -80.0, 0.5, BOX, 3);
-            }
-            else {
-                // box
-                make_box(0.8, 1.0, -80.0, 1.0, BOX, 2);
-            }
+            // normal boxes
+            make_box(0.8, pow(1.0 * rang_box_size, 2), -80, 1.0 * rang_box_size, BOX, 2 * rang_box_size);
         }
     }
     // gravity for the boxes

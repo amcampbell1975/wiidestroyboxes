@@ -4,6 +4,7 @@
 #include <wiiuse/wpad.h>
 #include <ogc/system.h>
 #include <stdlib.h>
+
 #include "../box2d/box2d/box2d.h"
 #include "../source/wiidestroyboxes.h"
 
@@ -113,10 +114,8 @@ int main(int argc, char **argv) {
         draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
         
         WPAD_ScanPads();
-        
         for (int wiimote = 0; wiimote <= 3; wiimote++) {
             WPADData* data = WPAD_Data(wiimote);
-
             if(data->data_present) {
                 for (int i=0; i<boxes; i++) {
                    draw_box(i, data->ir.x, data->ir.y);
@@ -139,7 +138,6 @@ int main(int argc, char **argv) {
                     for (int i=0; i<boxes; i++) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
-                            
                             if (box_hp[i] <= 0) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
                                 if (difficulty == 1) {
@@ -171,7 +169,6 @@ int main(int argc, char **argv) {
                 }
             }
         }
-
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_limit - (frame / 60.0));
         GRRLIB_Printf(5, 20, tex_BMfont5, GRRLIB_WHITE, 1, "Score %d", score);
         GRRLIB_Render();
@@ -184,7 +181,6 @@ int main(int argc, char **argv) {
             break;
         }
     }
-    
 	// clean up box2d and GRRLIB
 	clean_up_box2d();
     GRRLIB_FreeTexture(tex_box);
