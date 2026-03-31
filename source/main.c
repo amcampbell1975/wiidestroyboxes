@@ -52,6 +52,7 @@ extern b2BodyId boxID[MAX_BOXES];
 extern b2BodyId groundId;
 
 float time_limit = 30.0;
+float time_left;
 int difficulty = 2;
 int score = 0;
 bool debug = true;
@@ -106,6 +107,7 @@ int main(int argc, char **argv) {
 
 	while(true) {
         box2d_next_frame();
+        time_left = time_limit - (frame / 60.0);
         GRRLIB_FillScreen(GRRLIB_PURPLE);
         
         // draw floor
@@ -142,7 +144,7 @@ int main(int argc, char **argv) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
                                 if (difficulty == 1) {
                                     score += box_score[i] * 5;
-                                    time_limit += 0.15;
+                                    time_limit += 0.1;
                                 }
                                 else if (difficulty == 2) {
                                     score += box_score[i] * 4;
@@ -169,12 +171,13 @@ int main(int argc, char **argv) {
                 }
             }
         }
-        GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_limit - (frame / 60.0));
+        GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_left);
         GRRLIB_Printf(5, 20, tex_BMfont5, GRRLIB_WHITE, 1, "Score %d", score);
+        GRRLIB_Printf(5, 35, tex_BMfont5, GRRLIB_WHITE, 1, "Difficulty %d", difficulty);
         GRRLIB_Render();
         
         u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
-        if ((time_limit - (frame / 60.0) <= 0.0) || 
+        if ((time_left <= 0.0) || 
                 (difficulty > 2 && score < 0) || 
                 (pressed & WPAD_BUTTON_HOME)) {
             // stop the game

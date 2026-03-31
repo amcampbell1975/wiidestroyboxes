@@ -61,11 +61,11 @@ static void make_box(float friction, float density, float gravity, float size, B
     shapeDef.material.friction = friction;
     box_gravity[boxes] = gravity;
 
-    box_size[boxes] = size * 0.5;
-    box = b2MakeBox(size * 0.5, size * 0.5);
+    box_size[boxes] = size * 0.4;
+    box = b2MakeBox(size * 0.4, size * 0.4);
 
     shapeDef.density = density;
-    box_density[boxes] = density * size * 0.5;
+    box_density[boxes] = density * size * 0.4;
 
     box_img[boxes] = img;
 
@@ -87,13 +87,13 @@ void box2d_next_frame(void) {
         if (frame == 900) {
             // boss boxes
             if (difficulty == 1) {
-                make_box(0.8, 4.0, -20.0, 3.5, BOX, 30);
+                make_box(0.8, 4.0, -20.0, 6.5, BOX, 30);
             }
             else if (difficulty == 2) {
-                make_box(0.4, 8.0, -20.0 , 2.5, GOLD_BOX, 15);
+                make_box(0.4, 8.0, -20.0, 5.0, GOLD_BOX, 15);
             }
             else if (difficulty == 3) {
-                make_box(0.8, 6.0, -5.0 , 2.5, TELE_BOX, 10);
+                make_box(0.8, 6.0, -5.0, 5.0, TELE_BOX, 10);
             }
         }
         else if (rand() % 7 == 0) {
