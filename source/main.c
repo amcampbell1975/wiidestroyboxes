@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 #include "../box2d/box2d/box2d.h"
-#include "../source/wiidestroyboxes.h"
+#include "../source/game.h"
 
 // Font
 #include "BMfont5_png.h"

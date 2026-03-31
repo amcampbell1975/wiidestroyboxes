@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "../box2d/box2d/box2d.h"
-#include "wiidestroyboxes.h"
+#include "game.h"
 
 int boxes = 0;
 int box_hp[MAX_BOXES];
