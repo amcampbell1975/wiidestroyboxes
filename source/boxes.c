@@ -104,6 +104,10 @@ void box2d_next_frame(void) {
             // gold boxes
             make_box(0.4, pow(1.5 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, GOLD_BOX, 3 * rang_box_size);
         }
+        else if (rand() % 7 == 0) {
+            // tnt boxes
+            make_box(0.4, pow(1.5 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, TNT_BOX, 3 * rang_box_size);
+        }
         else {
             // normal boxes
             make_box(0.8, pow(1.0 * rang_box_size, 2), -80, 1.0 * rang_box_size, BOX, 2 * rang_box_size);

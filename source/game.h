@@ -3,5 +3,6 @@
 typedef enum {
     BOX,
     GOLD_BOX,
-    TELE_BOX
+    TELE_BOX,
+    TNT_BOX
 }BoxType_T;

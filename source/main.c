@@ -19,6 +19,8 @@ GRRLIB_texImg *tex_box;
 GRRLIB_texImg *tex_gold_box;
 #include "tele_box_png.h"
 GRRLIB_texImg *tex_tele_box;
+#include "tnt_box_png.h"
+GRRLIB_texImg *tex_tnt_box;
 #include "thing_1_png.h"
 GRRLIB_texImg *tex_thing_1;
 
@@ -72,6 +74,9 @@ void draw_box(int box, int light_x, int light_y) {
     else if (box_img[box] == TELE_BOX) {
         draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
     }
+    else if (box_img[box] == TNT_BOX) {
+        draw(pos.x, pos.y, tex_tnt_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
+    }
     
     if (debug) {
         GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
@@ -95,6 +100,9 @@ int main(int argc, char **argv) {
     
     tex_tele_box = GRRLIB_LoadTexture(tele_box_png);
     GRRLIB_SetMidHandle(tex_tele_box, true);
+    
+    tex_tnt_box = GRRLIB_LoadTexture(tnt_box_png);
+    GRRLIB_SetMidHandle(tex_tnt_box, true);
 
     tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
     GRRLIB_SetMidHandle(tex_thing_1, true);
