@@ -57,7 +57,7 @@ float time_limit = 30.0;
 float time_left;
 int difficulty = 2;
 int score = 0;
-bool debug = true;
+bool debug = false;
 
 
 void draw_box(int box, int light_x, int light_y) {
@@ -112,6 +112,44 @@ int main(int argc, char **argv) {
     WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
 	
 	setup_box2d();
+
+    while (true)
+    {
+        GRRLIB_FillScreen(GRRLIB_PURPLE);
+        if (difficulty != 4) {
+            GRRLIB_Printf(250, 264, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
+            GRRLIB_Printf(100, 284, tex_BMfont5, GRRLIB_WHITE, 1, "Press the up or down arrows to change difficulty (%d)", difficulty);
+        }
+        else {
+            GRRLIB_Printf(250 + rand() % 5, 264 + rand() % 5, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
+            GRRLIB_Printf(100 + rand() % 5, 284 + rand() % 5, tex_BMfont5, GRRLIB_WHITE, 1, "Press the up or down arrows to change difficulty (%d)", difficulty);
+        }
+        GRRLIB_Render();
+        
+        WPAD_ScanPads();
+        u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
+        if (pressed & WPAD_BUTTON_A) {
+            break;
+        }
+        
+        if (pressed & WPAD_BUTTON_HOME) {
+            difficulty = 4;
+        }
+
+        if (pressed & WPAD_BUTTON_UP) {
+            difficulty++;
+            if (difficulty > 3) {
+                difficulty = 1;
+            }
+        }
+
+        if (pressed & WPAD_BUTTON_DOWN) {
+            difficulty--;
+            if (difficulty < 1) {
+                difficulty = 3;
+            }
+        }
+    }
 
 	while(true) {
         box2d_next_frame();

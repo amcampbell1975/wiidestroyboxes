@@ -1,8 +1,8 @@
-<?xml version="0.6.5" encoding="UTF-8" standalone="yes"?>
-<app version="0.6.5">
+<?xml version="0.7.0" encoding="UTF-8" standalone="yes"?>
+<app version="0.7.0">
   <name>Wiidestroyboxes</name>
   <coder>codingbanana</coder>
-  <version>0.6.5</version>
+  <version>0.7.0</version>
   <release_date>202601</release_date>
   <short_description>Wiidestroyboxes is my DofE project</short_description>
   <long_description>
@@ -14,7 +14,6 @@ Controls:
 
 Todo:
 - Fix player 4
-- Main menu
 - Pvp mode
 - Powerups boxes
 
