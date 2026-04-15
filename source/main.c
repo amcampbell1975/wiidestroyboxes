@@ -186,27 +186,27 @@ int main(int argc, char **argv) {
                     for (int i=0; i<boxes; i++) {
                         if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
                             box_hp[i] -= 1;
+                            score += box_score[i];
+
+                            if (box_img[i] == TELE_BOX) {
+                                respawn_box(i);
+                            }
+
                             if (box_hp[i] <= 0) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
-                                if (difficulty == 1) {
-                                    score += box_score[i] * 5;
-                                    time_limit += 0.1;
-                                }
-                                else if (difficulty == 2) {
-                                    score += box_score[i] * 4;
-                                    time_limit += 0.05;
-                                }
-                                else if (difficulty == 3) {
-                                    score += box_score[i] * 3;
-                                }
-                                else {
-                                    score += box_score[i];
-                                }
-                            }
-                            else {
-                                score += box_score[i];
-                                if (box_img[i] == TELE_BOX) {
-                                    respawn_box(i);
+
+                                if (box_img[i] != TNT_BOX) {
+                                    if (difficulty == 1) {
+                                        score += box_score[i] * 3;
+                                        time_limit += 0.07;
+                                    }
+                                    else if (difficulty == 2) {
+                                        score += box_score[i] * 2;
+                                        time_limit += 0.05;
+                                    }
+                                    else if (difficulty == 3) {
+                                        time_limit += 0.03;
+                                    }
                                 }
                             }
                         }

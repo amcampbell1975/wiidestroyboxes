@@ -84,33 +84,33 @@ void box2d_next_frame(void) {
 
         int rang_box_size = rand() % 3 + 1;
 
+        // boss boxes
         if (frame == 900) {
-            // boss boxes
             if (difficulty == 1) {
-                make_box(0.8, 4.0, -20.0, 6.5, BOX, 30, 50);
+                make_box(1.0, 4.0, -20.0, 6.5, BOX, 35, 50);
             }
             else if (difficulty == 2) {
-                make_box(0.4, 8.0, -20.0, 5.0, GOLD_BOX, 15, 50);
+                make_box(1.0, 8.0, -20.0, 5.0, GOLD_BOX, 20, 50);
             }
             else if (difficulty == 3) {
-                make_box(0.8, 6.0, -5.0, 5.0, TELE_BOX, 10, 50);
+                make_box(1.0, 6.0, -5.0, 5.0, TELE_BOX, 15, 50);
+            }
+            else {
+                make_box(1.0, 6.0, -20.0, 5.0, TNT_BOX, 1, -10000);
             }
         }
-        else if (rand() % 7 == 0) {
-            // teleport boxes
-            make_box(0.8, pow(0.75 * rang_box_size, 2), -20.0, 1.0 * rang_box_size, TELE_BOX, 2 * rang_box_size, 30);
+        // normal boxes
+        else if (rand() % 12 == 0) {
+            make_box(1.0, pow(0.75 * rang_box_size, 2), -20.0, 1.0 * rang_box_size, TELE_BOX, 2 * rang_box_size, 30 * rang_box_size);
         }
-        else if (rand() % 7 == 0) {
-            // gold boxes
-            make_box(0.4, pow(1.5 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, GOLD_BOX, 3 * rang_box_size, 20);
+        else if (rand() % 12 == 0) {
+            make_box(1.0, pow(1.5 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, GOLD_BOX, 3 * rang_box_size, 20 * rang_box_size);
         }
-        else if (rand() % 7 == 0) {
-            // tnt boxes
-            make_box(0.4, pow(1.0 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, TNT_BOX, 1 * rang_box_size, -10);
+        else if (rand() % 12 == 0) {
+            make_box(1.0, pow(1.0 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, TNT_BOX, 1, -250);
         }
         else {
-            // normal boxes
-            make_box(0.8, pow(1.0 * rang_box_size, 2), -80, 1.0 * rang_box_size, BOX, 2 * rang_box_size, 10);
+            make_box(1.0, pow(1.0 * rang_box_size, 2), -80, 1.0 * rang_box_size, BOX, 2 * rang_box_size, 10 * rang_box_size);
         }
     }
     // gravity for the boxes
@@ -125,7 +125,7 @@ void box2d_next_frame(void) {
 
 
 void respawn_box(int boxID_to_move) {
-    b2Body_SetTransform(boxID[boxID_to_move], (b2Vec2){rand() % 12 - 6, 12}, b2MakeRot(0));
+    b2Body_SetTransform(boxID[boxID_to_move], (b2Vec2){rand() % 12 - 6, 8}, b2MakeRot(0));
 }
 
 
