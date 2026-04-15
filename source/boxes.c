@@ -93,7 +93,7 @@ void box2d_next_frame(void) {
                 make_box(1.0, 8.0, -20.0, 5.0, GOLD_BOX, 20, 50);
             }
             else if (difficulty == 3) {
-                make_box(1.0, 6.0, -5.0, 5.0, TELE_BOX, 15, 50);
+                make_box(1.0, 6.0, -5.0, 5.0, TELE_BOX, 15, 200);
             }
             else {
                 make_box(1.0, 6.0, -20.0, 5.0, TNT_BOX, 1, -10000);
@@ -101,16 +101,16 @@ void box2d_next_frame(void) {
         }
         // normal boxes
         else if (rand() % 12 == 0) {
-            make_box(1.0, pow(0.75 * rang_box_size, 2), -20.0, 1.0 * rang_box_size, TELE_BOX, 2 * rang_box_size, 30 * rang_box_size);
+            make_box(1.0, pow(0.75 * rang_box_size, 2), -20.0, 1.0 * rang_box_size, TELE_BOX, 2 * rang_box_size, 50);
         }
         else if (rand() % 12 == 0) {
-            make_box(1.0, pow(1.5 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, GOLD_BOX, 3 * rang_box_size, 20 * rang_box_size);
+            make_box(1.0, pow(1.5 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, GOLD_BOX, 3 * rang_box_size, 20);
         }
         else if (rand() % 12 == 0) {
-            make_box(1.0, pow(1.0 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, TNT_BOX, 1, -250);
+            make_box(1.0, pow(1.0 * rang_box_size, 2), -80.0, 1.0 * rang_box_size, TNT_BOX, 1, -200);
         }
         else {
-            make_box(1.0, pow(1.0 * rang_box_size, 2), -80, 1.0 * rang_box_size, BOX, 2 * rang_box_size, 10 * rang_box_size);
+            make_box(1.0, pow(1.0 * rang_box_size, 2), -80, 1.0 * rang_box_size, BOX, 2 * rang_box_size, 10);
         }
     }
     // gravity for the boxes

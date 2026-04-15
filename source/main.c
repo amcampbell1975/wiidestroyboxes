@@ -113,17 +113,18 @@ int main(int argc, char **argv) {
 	
 	setup_box2d();
 
-    while (true)
-    {
+    while (true) {
         GRRLIB_FillScreen(GRRLIB_PURPLE);
+        
         if (difficulty != 4) {
-            GRRLIB_Printf(250, 264, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
-            GRRLIB_Printf(100, 284, tex_BMfont5, GRRLIB_WHITE, 1, "Press the up or down arrows to change difficulty (%d)", difficulty);
+            GRRLIB_Printf(250, 200, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
+            GRRLIB_Printf(100, 250, tex_BMfont5, GRRLIB_WHITE, 1, "Press the up or down arrows to change difficulty (%d)", difficulty);
         }
         else {
-            GRRLIB_Printf(250 + rand() % 5, 264 + rand() % 5, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
-            GRRLIB_Printf(100 + rand() % 5, 284 + rand() % 5, tex_BMfont5, GRRLIB_WHITE, 1, "Press the up or down arrows to change difficulty (%d)", difficulty);
+            GRRLIB_Printf(250 + rand() % 3, 200 + rand() % 3, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
+            GRRLIB_Printf(100 + rand() % 3, 250 + rand() % 3, tex_BMfont5, GRRLIB_WHITE, 1, "Press the up or down arrows to change difficulty (%d)", difficulty);
         }
+
         GRRLIB_Render();
         
         WPAD_ScanPads();
@@ -170,16 +171,16 @@ int main(int argc, char **argv) {
                 }
 
                 if (wiimote == 0) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0xff0000ff);
+                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_BLUE);
                 }
                 else if (wiimote == 1) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0x0000ffff);
+                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_RED);
                 }
                 else if (wiimote == 2) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0x11ff00ff);
+                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_GREEN);
                 }
                 else {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, 0xffee00ff);
+                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_YELLOW);
                 }
 
                 if ((data->btns_d && WPAD_BUTTON_A) || (data->btns_d && WPAD_BUTTON_B)) {
@@ -197,15 +198,12 @@ int main(int argc, char **argv) {
 
                                 if (box_img[i] != TNT_BOX) {
                                     if (difficulty == 1) {
-                                        score += box_score[i] * 3;
+                                        score += box_score[i] * 2;
                                         time_limit += 0.07;
                                     }
                                     else if (difficulty == 2) {
-                                        score += box_score[i] * 2;
+                                        score += box_score[i];
                                         time_limit += 0.05;
-                                    }
-                                    else if (difficulty == 3) {
-                                        time_limit += 0.03;
                                     }
                                 }
                             }
