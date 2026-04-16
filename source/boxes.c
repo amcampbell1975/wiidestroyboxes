@@ -78,10 +78,13 @@ static void make_box(float friction, float density, float gravity, float size, B
 void box2d_next_frame(void) {
     b2World_Step(worldId, timeStep, subStep);
 
+    if (frame % 60 == 0 && frame >= 300 && difficulty >= 3) {
+        score -= 10 * difficulty;
+    }
+    
     // make boxs
-    if (boxes < MAX_BOXES && frame % 10 == 0) {
+    if (frame % 10 == 0) {
         boxDef.position = (b2Vec2){rand() % 12 - 6, 12};
-
         int rang_box_size = rand() % 3 + 1;
 
         // boss boxes
