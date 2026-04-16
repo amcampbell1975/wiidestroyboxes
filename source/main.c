@@ -57,6 +57,7 @@ float time_limit = 30.0;
 float time_left;
 int difficulty = 2;
 int score = 0;
+bool secret = false;
 bool debug = false;
 
 
@@ -115,15 +116,9 @@ int main(int argc, char **argv) {
 
     while (true) {
         GRRLIB_FillScreen(GRRLIB_PURPLE);
-        
-        if (difficulty != 4) {
-            GRRLIB_Printf(250, 200, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
-            GRRLIB_Printf(100, 250, tex_BMfont5, GRRLIB_WHITE, 1, "Press the up or down arrows to change difficulty (%d)", difficulty);
-        }
-        else {
-            GRRLIB_Printf(250 + rand() % 3, 200 + rand() % 3, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
-            GRRLIB_Printf(100 + rand() % 3, 250 + rand() % 3, tex_BMfont5, GRRLIB_WHITE, 1, "Press the up or down arrows to change difficulty (%d)", difficulty);
-        }
+
+        GRRLIB_Printf(250, 200, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
+        GRRLIB_Printf(250, 250, tex_BMfont5, GRRLIB_WHITE, 1, "< difficulty %d >", difficulty);
 
         GRRLIB_Render();
         
@@ -134,19 +129,19 @@ int main(int argc, char **argv) {
         }
         
         if (pressed & WPAD_BUTTON_HOME) {
-            difficulty = 4;
+            secret = true;
         }
 
-        if (pressed & WPAD_BUTTON_UP) {
+        if (pressed & WPAD_BUTTON_RIGHT) {
             difficulty++;
-            if (difficulty > 3) {
+            if (difficulty > 3 && !secret) {
                 difficulty = 1;
             }
         }
 
-        if (pressed & WPAD_BUTTON_DOWN) {
+        if (pressed & WPAD_BUTTON_LEFT) {
             difficulty--;
-            if (difficulty < 1) {
+            if (difficulty < 1 && !secret) {
                 difficulty = 3;
             }
         }
@@ -179,7 +174,7 @@ int main(int argc, char **argv) {
                 else if (wiimote == 2) {
                     GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_GREEN);
                 }
-                else {
+                else if (wiimote == 3) {
                     GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_YELLOW);
                 }
 
@@ -197,7 +192,7 @@ int main(int argc, char **argv) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
 
                                 if (box_img[i] != TNT_BOX) {
-                                    if (difficulty == 1) {
+                                    if (difficulty <= 1) {
                                         score += box_score[i] * 2;
                                         time_limit += 0.07;
                                     }
