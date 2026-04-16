@@ -43,6 +43,7 @@ bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, floa
 int disToPoint(float pointX, float pointY, float boxX, float boxY);
 int disToPoint(float pointX, float pointY, float boxX, float boxY);
 void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y, int color);
+void draw_box(int box, int light_x, int light_y);
 
 extern int frame;
 extern int boxes;
@@ -60,29 +61,6 @@ int score = 0;
 bool secret = false;
 bool debug = false;
 
-
-void draw_box(int box, int light_x, int light_y) {
-    b2Vec2 pos = b2Body_GetPosition(boxID[box]);
-    b2Rot rot = b2Body_GetRotation(boxID[box]);
-
-    int light_effect = clamp(disToPoint(light_x, light_y, pos.x, pos.y) * 2, 0, 255);
-    if (box_img[box] == BOX) {
-        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
-    }
-    else if (box_img[box] == GOLD_BOX) {
-        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
-    }
-    else if (box_img[box] == TELE_BOX) {
-        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
-    }
-    else if (box_img[box] == TNT_BOX) {
-        draw(pos.x, pos.y, tex_tnt_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
-    }
-    
-    if (debug) {
-        GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
-    }
-}
 
 
 int main(int argc, char **argv) {
@@ -262,4 +240,28 @@ int disToPoint(float pointX, float pointY, float boxX, float boxY) {
 
 void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y, int color) {
     GRRLIB_DrawImg((x * 25) + 320, (y * - 25) + 264, img, b2Rot_GetAngle(rot) / B2_PI * - 180, size_x * 0.25, size_y * 0.25, color);
+}
+
+
+void draw_box(int box, int light_x, int light_y) {
+    b2Vec2 pos = b2Body_GetPosition(boxID[box]);
+    b2Rot rot = b2Body_GetRotation(boxID[box]);
+
+    int light_effect = clamp(disToPoint(light_x, light_y, pos.x, pos.y) * time_limit / time_left, 0, 255);
+    if (box_img[box] == BOX) {
+        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
+    }
+    else if (box_img[box] == GOLD_BOX) {
+        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
+    }
+    else if (box_img[box] == TELE_BOX) {
+        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
+    }
+    else if (box_img[box] == TNT_BOX) {
+        draw(pos.x, pos.y, tex_tnt_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
+    }
+    
+    if (debug) {
+        GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
+    }
 }
