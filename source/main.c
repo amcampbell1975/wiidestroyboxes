@@ -23,6 +23,8 @@ GRRLIB_texImg *tex_tele_box;
 GRRLIB_texImg *tex_tnt_box;
 #include "thing_1_png.h"
 GRRLIB_texImg *tex_thing_1;
+#include "shot_png.h"
+GRRLIB_texImg *tex_shot;
 
 // Colors
 #define GRRLIB_BLACK  0x000000FF
@@ -86,6 +88,9 @@ int main(int argc, char **argv) {
     tex_thing_1 = GRRLIB_LoadTexture(thing_1_png);
     GRRLIB_SetMidHandle(tex_thing_1, true);
 
+    tex_shot = GRRLIB_LoadTexture(shot_png);
+    GRRLIB_SetMidHandle(tex_shot, true);
+
     // wiimote
     WPAD_Init();
     WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
@@ -144,16 +149,16 @@ int main(int argc, char **argv) {
                 }
 
                 if (wiimote == 0) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_BLUE);
+                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_BLUE);
                 }
                 else if (wiimote == 1) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_RED);
+                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_RED);
                 }
                 else if (wiimote == 2) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_GREEN);
+                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_GREEN);
                 }
                 else if (wiimote == 3) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_box, 1, 0.1, 0.1, GRRLIB_YELLOW);
+                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_YELLOW);
                 }
 
                 if ((data->btns_d && WPAD_BUTTON_A) || (data->btns_d && WPAD_BUTTON_B)) {

@@ -18,3 +18,9 @@ Video of the original game https://youtu.be/pmGe6ucNaJg?si=PcnJ8TSHByOLCiZ3
 ![](img/img5.png)
 # Some more time later...
 ![](img/img6.png)
+
+Todo:
+- Fix player 4
+- Pvp mode
+- Powerups boxes
+- Sound
