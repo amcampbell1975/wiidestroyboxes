@@ -46,6 +46,7 @@ int disToPoint(float pointX, float pointY, float boxX, float boxY);
 int disToPoint(float pointX, float pointY, float boxX, float boxY);
 void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y, int color);
 void draw_box(int box, int light_x, int light_y);
+void draw_wiimotes();
 
 extern int frame;
 extern int boxes;
@@ -98,15 +99,9 @@ int main(int argc, char **argv) {
 	setup_box2d();
 
     while (true) {
-        GRRLIB_FillScreen(GRRLIB_PURPLE);
-
-        GRRLIB_Printf(250, 200, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
-        GRRLIB_Printf(250, 250, tex_BMfont5, GRRLIB_WHITE, 1, "< difficulty %d >", difficulty);
-
-        GRRLIB_Render();
-        
         WPAD_ScanPads();
         u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
+
         if (pressed & WPAD_BUTTON_A) {
             break;
         }
@@ -128,37 +123,34 @@ int main(int argc, char **argv) {
                 difficulty = 3;
             }
         }
+
+        GRRLIB_FillScreen(GRRLIB_PURPLE);
+        draw_wiimotes();
+        
+        GRRLIB_Printf(250, 200, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
+        GRRLIB_Printf(250, 250, tex_BMfont5, GRRLIB_WHITE, 1, "< difficulty %d >", difficulty);
+
+        GRRLIB_Render();
     }
 
 	while(true) {
         box2d_next_frame();
         time_left = time_limit - (frame / 60.0);
-        GRRLIB_FillScreen(GRRLIB_PURPLE);
         
-        // draw floor
+        // draw
+        GRRLIB_FillScreen(GRRLIB_PURPLE);
+
         b2Vec2 pos = b2Body_GetPosition(groundId);
         b2Rot rot = b2Body_GetRotation(groundId);
         draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
-        
+
         WPAD_ScanPads();
         for (int wiimote = 0; wiimote <= 3; wiimote++) {
             WPADData* data = WPAD_Data(wiimote);
             if(data->data_present) {
+
                 for (int i=0; i<boxes; i++) {
                    draw_box(i, data->ir.x, data->ir.y);
-                }
-
-                if (wiimote == 0) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_BLUE);
-                }
-                else if (wiimote == 1) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_RED);
-                }
-                else if (wiimote == 2) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_GREEN);
-                }
-                else if (wiimote == 3) {
-                    GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_YELLOW);
                 }
 
                 if ((data->btns_d && WPAD_BUTTON_A) || (data->btns_d && WPAD_BUTTON_B)) {
@@ -173,16 +165,11 @@ int main(int argc, char **argv) {
 
                             if (box_hp[i] <= 0) {
                                 b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
+                                b2Body_Disable(boxID[i]);
 
                                 if (box_img[i] != TNT_BOX) {
-                                    if (difficulty <= 1) {
-                                        score += box_score[i] * 2;
-                                        time_limit += 0.07;
-                                    }
-                                    else if (difficulty == 2) {
-                                        score += box_score[i];
-                                        time_limit += 0.05;
-                                    }
+                                    score += box_score[i] * 2;
+                                    time_limit += 0.1 / difficulty;
                                 }
                             }
                         }
@@ -193,16 +180,17 @@ int main(int argc, char **argv) {
                 }
             }
         }
+
+        draw_wiimotes();
+
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_left);
         GRRLIB_Printf(5, 20, tex_BMfont5, GRRLIB_WHITE, 1, "Score %d", score);
         GRRLIB_Printf(5, 35, tex_BMfont5, GRRLIB_WHITE, 1, "Difficulty %d", difficulty);
         GRRLIB_Render();
         
+        WPAD_ScanPads();
         u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
-        if ((time_left <= 0.0) || 
-                (difficulty > 2 && score < 0) || 
-                (pressed & WPAD_BUTTON_HOME)) {
-            // stop the game
+        if ((time_left <= 0.0) || (difficulty > 2 && score < 0) || (pressed & WPAD_BUTTON_HOME)) {
             break;
         }
     }
@@ -268,5 +256,27 @@ void draw_box(int box, int light_x, int light_y) {
     
     if (debug) {
         GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
+    }
+}
+
+
+void draw_wiimotes() {
+    WPAD_ScanPads();
+    for (int wiimote = 0; wiimote <= 3; wiimote++) {
+        WPADData* data = WPAD_Data(wiimote);
+        if(data->data_present) {
+            if (wiimote == 0) {
+                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_BLUE);
+            }
+            else if (wiimote == 1) {
+                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_RED);
+            }
+            else if (wiimote == 2) {
+                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_GREEN);
+            }
+            else if (wiimote == 3) {
+                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_YELLOW);
+            }
+        }
     }
 }
