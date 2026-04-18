@@ -65,7 +65,6 @@ bool secret = false;
 bool debug = false;
 
 
-
 int main(int argc, char **argv) {
     GRRLIB_Init();
     
@@ -145,17 +144,19 @@ int main(int argc, char **argv) {
         draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
 
         WPAD_ScanPads();
+        u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
+
         for (int wiimote = 0; wiimote <= 3; wiimote++) {
             WPADData* data = WPAD_Data(wiimote);
             if(data->data_present) {
 
                 for (int i=0; i<boxes; i++) {
-                   draw_box(i, data->ir.x, data->ir.y);
+                    draw_box(i, data->ir.x, data->ir.y);
                 }
 
-                if ((data->btns_d && WPAD_BUTTON_A) || (data->btns_d && WPAD_BUTTON_B)) {
+                if ((pressed && WPAD_BUTTON_A) || (pressed && WPAD_BUTTON_B)) {
                     for (int i=0; i<boxes; i++) {
-                        if (isPointTouchingBox(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y, box_size[i])) {
+                        if (disToPoint(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y) < box_size[i] * 30) {
                             box_hp[i] -= 1;
                             score += box_score[i];
 
@@ -188,8 +189,6 @@ int main(int argc, char **argv) {
         GRRLIB_Printf(5, 35, tex_BMfont5, GRRLIB_WHITE, 1, "Difficulty %d", difficulty);
         GRRLIB_Render();
         
-        WPAD_ScanPads();
-        u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
         if ((time_left <= 0.0) || (difficulty > 2 && score < 0) || (pressed & WPAD_BUTTON_HOME)) {
             break;
         }
@@ -213,17 +212,6 @@ int clamp(int value, int min, int max) {
 }
 
 
-bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize) {
-    float offsetX = abs(boxX * 25 + 320 - pointX);
-    float offsetY = abs(boxY * - 25 + 264  - pointY);
-    
-    if (offsetY < boxsize * 35 && offsetX < boxsize * 35) {
-        return true;
-    }
-    return false;
-}
-
-
 int disToPoint(float pointX, float pointY, float boxX, float boxY) {
     float offsetX = abs(boxX * 25 + 320 - pointX);
     float offsetY = abs(boxY * - 25 + 264  - pointY);
@@ -241,6 +229,7 @@ void draw_box(int box, int light_x, int light_y) {
     b2Rot rot = b2Body_GetRotation(boxID[box]);
 
     int light_effect = clamp(disToPoint(light_x, light_y, pos.x, pos.y) * time_limit / time_left, 0, 255);
+
     if (box_img[box] == BOX) {
         draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
     }
@@ -253,7 +242,7 @@ void draw_box(int box, int light_x, int light_y) {
     else if (box_img[box] == TNT_BOX) {
         draw(pos.x, pos.y, tex_tnt_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
     }
-    
+
     if (debug) {
         GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
     }
@@ -262,8 +251,10 @@ void draw_box(int box, int light_x, int light_y) {
 
 void draw_wiimotes() {
     WPAD_ScanPads();
+
     for (int wiimote = 0; wiimote <= 3; wiimote++) {
         WPADData* data = WPAD_Data(wiimote);
+
         if(data->data_present) {
             if (wiimote == 0) {
                 GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_BLUE);
@@ -274,7 +265,7 @@ void draw_wiimotes() {
             else if (wiimote == 2) {
                 GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_GREEN);
             }
-            else if (wiimote == 3) {
+            else {
                 GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_YELLOW);
             }
         }
