@@ -143,25 +143,28 @@ int main(int argc, char **argv) {
 
         for (int wiimote = 0; wiimote <= 3; wiimote++) {
             WPADData* data = WPAD_Data(wiimote);
-            if(data->data_present) {
-                if ((pressed && WPAD_BUTTON_A) || (pressed && WPAD_BUTTON_B)) {
-                    for (int i=0; i<boxes; i++) {
-                        if (disToPoint(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y) < box_size[i] * 30) {
-                            box_hp[i] -= 1;
-                            score += box_score[i];
 
-                            if (box_img[i] == TELE_BOX) {
-                                respawn_box(i);
-                            }
+            if(!data->data_present) {
+                continue;
+            }
 
-                            if (box_hp[i] <= 0) {
-                                b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
-                                b2Body_Disable(boxID[i]);
+            if ((pressed && WPAD_BUTTON_A) || (pressed && WPAD_BUTTON_B)) {
+                for (int i=0; i<boxes; i++) {
+                    if (disToPoint(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y) < box_size[i] * 30) {
+                        box_hp[i] -= 1;
+                        score += box_score[i];
 
-                                if (box_img[i] != TNT_BOX) {
-                                    score += box_score[i] * 2;
-                                    time_limit += 0.1 / difficulty;
-                                }
+                        if (box_img[i] == TELE_BOX) {
+                            respawn_box(i);
+                        }
+
+                        if (box_hp[i] <= 0) {
+                            b2Body_SetTransform(boxID[i], (b2Vec2){-1000, -1000}, b2MakeRot(0));
+                            b2Body_Disable(boxID[i]);
+
+                            if (box_img[i] != TNT_BOX) {
+                                score += box_score[i] * 2;
+                                time_limit += 0.1 / difficulty;
                             }
                         }
                     }
@@ -174,7 +177,7 @@ int main(int argc, char **argv) {
         b2Vec2 pos = b2Body_GetPosition(groundId);
         b2Rot rot = b2Body_GetRotation(groundId);
         draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
-        
+
         draw_boxes();
         draw_wiimotes();
 
@@ -189,6 +192,7 @@ int main(int argc, char **argv) {
     GRRLIB_FreeTexture(tex_gold_box);
     GRRLIB_FreeTexture(tex_tele_box);
     GRRLIB_FreeTexture(tex_thing_1);
+    GRRLIB_FreeTexture(tex_shot);
     GRRLIB_FreeTexture(tex_BMfont5);
     GRRLIB_Exit();
     return 0;
@@ -218,30 +222,32 @@ void draw_boxes() {
     WPAD_ScanPads();
     for (int wiimote = 0; wiimote <= 3; wiimote++) {
         WPADData* data = WPAD_Data(wiimote);
-        if(data->data_present) {
+        
+        if(!data->data_present) {
+            continue;
+        }
 
-            for (int i=0; i<boxes; i++) {
-                b2Vec2 pos = b2Body_GetPosition(boxID[i]);
-                b2Rot rot = b2Body_GetRotation(boxID[i]);
+        for (int i=0; i<boxes; i++) {
+            b2Vec2 pos = b2Body_GetPosition(boxID[i]);
+            b2Rot rot = b2Body_GetRotation(boxID[i]);
 
-                int light_effect = clamp(disToPoint(data->ir.x, data->ir.y, pos.x, pos.y) * time_limit / time_left, 0, 255);
+            int light_effect = clamp(disToPoint(data->ir.x, data->ir.y, pos.x, pos.y) * time_limit / time_left, 0, 255);
 
-                if (box_img[i] == BOX) {
-                    draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
-                }
-                else if (box_img[i] == GOLD_BOX) {
-                    draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
-                }
-                else if (box_img[i] == TELE_BOX) {
-                    draw(pos.x, pos.y, tex_tele_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
-                }
-                else if (box_img[i] == TNT_BOX) {
-                    draw(pos.x, pos.y, tex_tnt_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
-                }
+            if (box_img[i] == BOX) {
+                draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
+            }
+            else if (box_img[i] == GOLD_BOX) {
+                draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
+            }
+            else if (box_img[i] == TELE_BOX) {
+                draw(pos.x, pos.y, tex_tele_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
+            }
+            else if (box_img[i] == TNT_BOX) {
+                draw(pos.x, pos.y, tex_tnt_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
+            }
 
-                if (debug) {
-                    GRRLIB_Printf((data->ir.x * 25) + 320, (data->ir.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
-                }
+            if (debug) {
+                GRRLIB_Printf((data->ir.x * 25) + 320, (data->ir.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
             }
         }
     }
@@ -254,19 +260,21 @@ void draw_wiimotes() {
     for (int wiimote = 0; wiimote <= 3; wiimote++) {
         WPADData* data = WPAD_Data(wiimote);
 
-        if(data->data_present) {
-            if (wiimote == 0) {
-                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_BLUE);
-            }
-            else if (wiimote == 1) {
-                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_RED);
-            }
-            else if (wiimote == 2) {
-                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_GREEN);
-            }
-            else {
-                GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_YELLOW);
-            }
+        if(!data->data_present) {
+            continue;
+        }
+
+        if (wiimote == 0) {
+            GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_BLUE);
+        }
+        else if (wiimote == 1) {
+            GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_RED);
+        }
+        else if (wiimote == 2) {
+            GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_GREEN);
+        }
+        else {
+            GRRLIB_DrawImg(data->ir.x, data->ir.y, tex_shot, 1, 0.15, 0.15, GRRLIB_YELLOW);
         }
     }
 }

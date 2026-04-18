@@ -116,11 +116,13 @@ void box2d_next_frame(void) {
             make_box(1.0, pow(1.0 * rang_box_size, 2), -80, 1.0 * rang_box_size, BOX, 2 * rang_box_size, 10);
         }
     }
+
     // gravity for the boxes
     for (int i=0; i<boxes; i++) {
         b2Vec2 apply_force = {0, box_density[i] * box_gravity[i]};
         b2Body_ApplyForceToCenter(boxID[i], apply_force, true);
     }
+    
     // move ground
     b2Body_SetTransform(groundId, (b2Vec2){0.0, - 12}, b2MakeRot(sin(frame / 90.0 * difficulty) * 0.35));
     frame++;
