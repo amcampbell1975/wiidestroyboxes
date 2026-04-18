@@ -41,11 +41,9 @@ void box2d_next_frame(void);
 void respawn_box(int boxID_to_move);
 void clean_up_box2d(void);
 int clamp(int value, int min, int max);
-bool isPointTouchingBox(float pointX, float pointY, float boxX, float boxY, float boxsize);
-int disToPoint(float pointX, float pointY, float boxX, float boxY);
 int disToPoint(float pointX, float pointY, float boxX, float boxY);
 void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float size_y, int color);
-void draw_box(int box, int light_x, int light_y);
+void draw_boxes();
 void draw_wiimotes();
 
 extern int frame;
@@ -136,24 +134,16 @@ int main(int argc, char **argv) {
         box2d_next_frame();
         time_left = time_limit - (frame / 60.0);
         
-        // draw
-        GRRLIB_FillScreen(GRRLIB_PURPLE);
-
-        b2Vec2 pos = b2Body_GetPosition(groundId);
-        b2Rot rot = b2Body_GetRotation(groundId);
-        draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
-
         WPAD_ScanPads();
         u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
+
+        if ((time_left <= 0.0) || (difficulty > 2 && score < 0) || (pressed & WPAD_BUTTON_HOME)) {
+            break;
+        }
 
         for (int wiimote = 0; wiimote <= 3; wiimote++) {
             WPADData* data = WPAD_Data(wiimote);
             if(data->data_present) {
-
-                for (int i=0; i<boxes; i++) {
-                    draw_box(i, data->ir.x, data->ir.y);
-                }
-
                 if ((pressed && WPAD_BUTTON_A) || (pressed && WPAD_BUTTON_B)) {
                     for (int i=0; i<boxes; i++) {
                         if (disToPoint(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y) < box_size[i] * 30) {
@@ -176,22 +166,22 @@ int main(int argc, char **argv) {
                         }
                     }
                 }
-                if (debug) {
-                    GRRLIB_Printf(295, 5 + wiimote * 20, tex_BMfont5, GRRLIB_WHITE, 1, "wiimote %d: %0.1fX %f0.1Y %fA", wiimote, data->ir.x, data->ir.y, data->ir.angle);
-                }
             }
         }
+        // draw
+        GRRLIB_FillScreen(GRRLIB_PURPLE);
 
+        b2Vec2 pos = b2Body_GetPosition(groundId);
+        b2Rot rot = b2Body_GetRotation(groundId);
+        draw(pos.x, pos.y, tex_thing_1, rot, 10, 10, 0xffffffff);
+        
+        draw_boxes();
         draw_wiimotes();
 
         GRRLIB_Printf(5, 5, tex_BMfont5, GRRLIB_WHITE, 1, "Time remaining %0.1f", time_left);
         GRRLIB_Printf(5, 20, tex_BMfont5, GRRLIB_WHITE, 1, "Score %d", score);
         GRRLIB_Printf(5, 35, tex_BMfont5, GRRLIB_WHITE, 1, "Difficulty %d", difficulty);
         GRRLIB_Render();
-        
-        if ((time_left <= 0.0) || (difficulty > 2 && score < 0) || (pressed & WPAD_BUTTON_HOME)) {
-            break;
-        }
     }
 	// clean up box2d and GRRLIB
 	clean_up_box2d();
@@ -224,27 +214,36 @@ void draw(float x, float y, GRRLIB_texImg *img, b2Rot rot, float size_x, float s
 }
 
 
-void draw_box(int box, int light_x, int light_y) {
-    b2Vec2 pos = b2Body_GetPosition(boxID[box]);
-    b2Rot rot = b2Body_GetRotation(boxID[box]);
+void draw_boxes() {
+    WPAD_ScanPads();
+    for (int wiimote = 0; wiimote <= 3; wiimote++) {
+        WPADData* data = WPAD_Data(wiimote);
+        if(data->data_present) {
 
-    int light_effect = clamp(disToPoint(light_x, light_y, pos.x, pos.y) * time_limit / time_left, 0, 255);
+            for (int i=0; i<boxes; i++) {
+                b2Vec2 pos = b2Body_GetPosition(boxID[i]);
+                b2Rot rot = b2Body_GetRotation(boxID[i]);
 
-    if (box_img[box] == BOX) {
-        draw(pos.x, pos.y, tex_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
-    }
-    else if (box_img[box] == GOLD_BOX) {
-        draw(pos.x, pos.y, tex_gold_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
-    }
-    else if (box_img[box] == TELE_BOX) {
-        draw(pos.x, pos.y, tex_tele_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
-    }
-    else if (box_img[box] == TNT_BOX) {
-        draw(pos.x, pos.y, tex_tnt_box, rot, box_size[box], box_size[box], 0xFFFFFFFF - light_effect);
-    }
+                int light_effect = clamp(disToPoint(data->ir.x, data->ir.y, pos.x, pos.y) * time_limit / time_left, 0, 255);
 
-    if (debug) {
-        GRRLIB_Printf((pos.x * 25) + 320, (pos.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
+                if (box_img[i] == BOX) {
+                    draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
+                }
+                else if (box_img[i] == GOLD_BOX) {
+                    draw(pos.x, pos.y, tex_gold_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
+                }
+                else if (box_img[i] == TELE_BOX) {
+                    draw(pos.x, pos.y, tex_tele_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
+                }
+                else if (box_img[i] == TNT_BOX) {
+                    draw(pos.x, pos.y, tex_tnt_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
+                }
+
+                if (debug) {
+                    GRRLIB_Printf((data->ir.x * 25) + 320, (data->ir.y * - 25) + 264, tex_BMfont5, GRRLIB_WHITE, 1, "%d", light_effect);
+                }
+            }
+        }
     }
 }
 
