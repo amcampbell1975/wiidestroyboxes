@@ -62,8 +62,9 @@ float time_limit = 30.0;
 float time_left;
 int difficulty = 2;
 int score = 0;
-bool secret = false;
+int ui_number = 0;
 bool debug = false;
+bool telemode = false;
 
 
 int main(int argc, char **argv) {
@@ -108,22 +109,48 @@ int main(int argc, char **argv) {
         if (pressed & WPAD_BUTTON_A) {
             break;
         }
-        
-        if (pressed & WPAD_BUTTON_HOME) {
-            secret = true;
+
+        if (pressed & WPAD_BUTTON_DOWN) {
+            ui_number++;
+            if (ui_number > 2) {
+                ui_number = 0;
+            }
+        }
+
+        if (pressed & WPAD_BUTTON_UP) {
+            ui_number--;
+            if (ui_number < 0) {
+                ui_number = 2;
+            }
         }
 
         if (pressed & WPAD_BUTTON_RIGHT) {
-            difficulty++;
-            if (difficulty > 3 && !secret) {
-                difficulty = 1;
+            if (ui_number == 0) {
+                difficulty++;
+                if (difficulty > 3 && !debug) {
+                    difficulty = 1;
+                }
+            }
+            else if (ui_number == 1) {
+                telemode = !telemode;
+            }
+            else if (ui_number == 2) {
+                debug = !debug;
             }
         }
 
         if (pressed & WPAD_BUTTON_LEFT) {
-            difficulty--;
-            if (difficulty < 1 && !secret) {
-                difficulty = 3;
+            if (ui_number == 0) {
+                difficulty--;
+                if (difficulty < 1 && !debug) {
+                    difficulty = 3;
+                }
+            }
+            else if (ui_number == 1) {
+                telemode = !telemode;
+            }
+            else if (ui_number == 2) {
+                debug = !debug;
             }
         }
 
@@ -131,7 +158,27 @@ int main(int argc, char **argv) {
         draw_wiimotes();
         
         GRRLIB_Printf(250, 200, tex_BMfont5, GRRLIB_WHITE, 1, "Press A to start");
-        GRRLIB_Printf(250, 250, tex_BMfont5, GRRLIB_WHITE, 1, "< difficulty %d >", difficulty);
+
+        if (ui_number == 0) {
+            GRRLIB_Printf(250, 225, tex_BMfont5, GRRLIB_WHITE, 1, "> Difficulty %d", difficulty);
+        }
+        else {
+            GRRLIB_Printf(250, 225, tex_BMfont5, GRRLIB_WHITE, 1, "Difficulty %d", difficulty);
+        }
+
+        if (ui_number == 1) {
+            GRRLIB_Printf(250, 250, tex_BMfont5, GRRLIB_WHITE, 1, "> Teleport mode %d", telemode);
+        }
+        else {
+            GRRLIB_Printf(250, 250, tex_BMfont5, GRRLIB_WHITE, 1, "Teleport mode %d", telemode);
+        }
+
+        if (ui_number == 2 && debug) {
+            GRRLIB_Printf(250, 275, tex_BMfont5, GRRLIB_WHITE, 1, "> Debug %d", debug);
+        }
+        else if (debug) {
+            GRRLIB_Printf(250, 275, tex_BMfont5, GRRLIB_WHITE, 1, "Debug %d", debug);
+        }
 
         GRRLIB_Render();
     }
@@ -161,7 +208,7 @@ int main(int argc, char **argv) {
                         score += box_score[i];
                         box_hiting[i] = 6;
 
-                        if (box_img[i] == TELE_BOX) {
+                        if (box_img[i] == TELE_BOX || telemode) {
                             respawn_box(i);
                         }
 
@@ -238,7 +285,7 @@ void draw_boxes() {
         for (int i=0; i<boxes; i++) {
             b2Vec2 pos = b2Body_GetPosition(boxID[i]);
             b2Rot rot = b2Body_GetRotation(boxID[i]);
-            
+            // 
             int light_effect = clamp(disToPoint(data->ir.x, data->ir.y, pos.x, pos.y) * time_limit / time_left, 0, 255);
             
             if (box_hiting[i] > 0) {
