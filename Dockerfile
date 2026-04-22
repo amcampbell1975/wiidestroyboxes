@@ -7,7 +7,10 @@
 # Using devkitPro's own published image as the base avoids all
 # the fragile install-script/wget issues. devkitPPC, libogc,
 # wiiuse, libfat, and the full Wii toolchain are already present.
-#
+# ##################################### 
+# Build this file into "wii-dev"
+# docker build . -t wii-dev
+# ##################################### 
 FROM devkitpro/devkitppc:latest
 
 LABEL maintainer=""
