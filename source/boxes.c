@@ -11,6 +11,7 @@ float box_size[MAX_BOXES];
 int box_gravity[MAX_BOXES];
 float box_density[MAX_BOXES];
 BoxType_T box_img[MAX_BOXES];
+int box_hiting[MAX_BOXES];
 
 b2WorldDef worldDef;
 b2WorldId worldId;
@@ -69,6 +70,8 @@ static void make_box(float friction, float density, float gravity, float size, B
 
     box_img[boxes] = img;
 
+    box_hiting[boxes] = 0;
+
     boxID[boxes] = b2CreateBody(worldId, &boxDef);
     b2CreatePolygonShape(boxID[boxes], &shapeDef, &box);
     boxes++;
@@ -117,10 +120,11 @@ void box2d_next_frame(void) {
         }
     }
 
-    // gravity for the boxes
+    // gravity for the boxes and boxes hiting effect
     for (int i=0; i<boxes; i++) {
         b2Vec2 apply_force = {0, box_density[i] * box_gravity[i]};
         b2Body_ApplyForceToCenter(boxID[i], apply_force, true);
+        box_hiting[i] -= 1;
     }
     
     // move ground

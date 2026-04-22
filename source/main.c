@@ -25,6 +25,8 @@ GRRLIB_texImg *tex_tnt_box;
 GRRLIB_texImg *tex_thing_1;
 #include "shot_png.h"
 GRRLIB_texImg *tex_shot;
+#include "white_png.h"
+GRRLIB_texImg *tex_white;
 
 // Colors
 #define GRRLIB_BLACK  0x000000FF
@@ -52,6 +54,7 @@ extern int box_hp[MAX_BOXES];
 extern int box_score[MAX_BOXES];
 extern float box_size[MAX_BOXES];
 extern BoxType_T box_img[MAX_BOXES];
+extern int box_hiting[MAX_BOXES];
 extern b2BodyId boxID[MAX_BOXES];
 extern b2BodyId groundId;
 
@@ -88,6 +91,9 @@ int main(int argc, char **argv) {
 
     tex_shot = GRRLIB_LoadTexture(shot_png);
     GRRLIB_SetMidHandle(tex_shot, true);
+
+    tex_white = GRRLIB_LoadTexture(white_png);
+    GRRLIB_SetMidHandle(tex_white, true);
 
     // wiimote
     WPAD_Init();
@@ -153,6 +159,7 @@ int main(int argc, char **argv) {
                     if (disToPoint(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y) < box_size[i] * 30) {
                         box_hp[i] -= 1;
                         score += box_score[i];
+                        box_hiting[i] = 6;
 
                         if (box_img[i] == TELE_BOX) {
                             respawn_box(i);
@@ -194,6 +201,7 @@ int main(int argc, char **argv) {
     GRRLIB_FreeTexture(tex_thing_1);
     GRRLIB_FreeTexture(tex_shot);
     GRRLIB_FreeTexture(tex_BMfont5);
+    GRRLIB_FreeTexture(tex_white);
     GRRLIB_Exit();
     return 0;
 }
@@ -230,10 +238,13 @@ void draw_boxes() {
         for (int i=0; i<boxes; i++) {
             b2Vec2 pos = b2Body_GetPosition(boxID[i]);
             b2Rot rot = b2Body_GetRotation(boxID[i]);
-
+            
             int light_effect = clamp(disToPoint(data->ir.x, data->ir.y, pos.x, pos.y) * time_limit / time_left, 0, 255);
-
-            if (box_img[i] == BOX) {
+            
+            if (box_hiting[i] > 0) {
+                draw(pos.x, pos.y, tex_white, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
+            }
+            else if (box_img[i] == BOX) {
                 draw(pos.x, pos.y, tex_box, rot, box_size[i], box_size[i], 0xFFFFFFFF - light_effect);
             }
             else if (box_img[i] == GOLD_BOX) {
