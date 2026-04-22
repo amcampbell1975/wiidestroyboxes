@@ -156,7 +156,7 @@ int main(int argc, char **argv) {
 
             if ((pressed && WPAD_BUTTON_A) || (pressed && WPAD_BUTTON_B)) {
                 for (int i=0; i<boxes; i++) {
-                    if (disToPoint(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y) < box_size[i] * 30) {
+                    if (disToPoint(data->ir.x, data->ir.y, b2Body_GetPosition(boxID[i]).x, b2Body_GetPosition(boxID[i]).y) < box_size[i] * 25) {
                         box_hp[i] -= 1;
                         score += box_score[i];
                         box_hiting[i] = 6;

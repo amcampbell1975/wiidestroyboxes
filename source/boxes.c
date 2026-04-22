@@ -86,17 +86,18 @@ void box2d_next_frame(void) {
     }
     
     // make boxs
-    if (frame % 8 == 0) {
-        boxDef.position = (b2Vec2){rand() % 12 - 6, 12};
+    if (frame % 10 == 0) {
+        boxDef.position = (b2Vec2){rand() % 10 - 5, 12};
         int rang_box_size = rand() % 3 + 1;
 
         // boss boxes
         if (frame == 900) {
+            boxDef.position = (b2Vec2){0, 12};
             if (difficulty <= 1) {
-                make_box(1.0, 4.0, -20.0, 7.0, BOX, 50, 50);
+                make_box(1.0, 4.0, -20.0, 7.0, BOX, 40, 50);
             }
             else if (difficulty == 2) {
-                make_box(1.0, 8.0, -10.0, 5.0, GOLD_BOX, 50, 50);
+                make_box(1.0, 8.0, -10.0, 5.0, GOLD_BOX, 40, 50);
             }
             else if (difficulty == 3) {
                 make_box(1.0, 6.0, -5.0, 4.0, TELE_BOX, 20, 200);
@@ -134,7 +135,7 @@ void box2d_next_frame(void) {
 
 
 void respawn_box(int boxID_to_move) {
-    b2Body_SetTransform(boxID[boxID_to_move], (b2Vec2){rand() % 12 - 6, 8}, b2MakeRot(0));
+    b2Body_SetTransform(boxID[boxID_to_move], (b2Vec2){rand() % 10 - 5, 8}, b2MakeRot(0));
 }
 
 
