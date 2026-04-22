@@ -36,9 +36,11 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 LIBS	:= -lgrrlib -lpngu
 LIBS	+= `$(PREFIX)pkg-config freetype2 libpng libjpeg --libs` -lfat
-LIBS	+= -lwiiuse
+#LIBS	+= -lwiiuse
 #LIBS	+= -lmodplay -laesnd
-LIBS	+= -lbte -logc -lm
+LIBS	+= -lasnd -lgrrlib -lwiiuse -lbte -logc -lm
+#LIBS	+= -lbte -logc -lm 
+#LIBS	+= -lasnd          # Audio
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -143,6 +145,15 @@ $(OFILES_SOURCES) : $(HFILES)
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	$(bin2o)
+
+#---------------------------------------------------------------------------------
+# This rule links in binary data with the .wav extension
+#---------------------------------------------------------------------------------
+%.wav.o	:	%.wav
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	$(bin2o)
+
 
 #---------------------------------------------------------------------------------
 # This rule links in binary data with the .ttf extension
